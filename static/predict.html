@@ -16,14 +16,21 @@
     <p id="greeting"></p> -->
     <input type="file" name="" value="" id="image-selector">
     <button type="button" name="button" id="predict-button">Predict</button>
+
+    <img class="my-img" src="" alt="" id="selected-image" />
+
     <p>Predictions</p>
     <p>Boy: <span id="boy-prediction"></span> </p>
     <p>Girl: <span id="girl-prediction"></span> </p>
-    <img src="" alt="" id="selected-image" />
+
+
+    <!-- TODO: Add dropping tool with preset dimensions: https://foliotek.github.io/Croppie/ -->
 
   </body>
 
   <script type="text/javascript">
+
+    // DETAILS INPUT
     // $("#name-button").click(function(event){
     //   let message = {
     //     name: $("#name-input").val()
@@ -33,6 +40,8 @@
     //     console.log(response);
     //   })
     // })
+
+    // IMAGE SELECTION
     let base64Image;
     $("#image-selector").change(function(){
       let reader = new FileReader();
@@ -47,6 +56,9 @@
       $("girl-prediction").text("");
     });
 
+    // IMAGE CROP
+
+    // FORM SUBMIT
     $("#predict-button").click(function(event){
       let message = {
         image: base64Image
