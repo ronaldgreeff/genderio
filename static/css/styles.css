@@ -39,3 +39,37 @@
     z-index: 2;
     position: relative;
 }
+
+/* CROPPERJS */
+/* Ensure the size of the image fit the container perfectly */
+img {
+  display: block;
+  /* This rule is very important, please don't ignore this */
+  max-width: 100%;
+}
+/* CROPPERJS */
+.container {
+   max-width: 960px;
+   margin: 20px auto;
+ }
+
+ img {
+   max-width: 100%;
+ }
+
+ .row,
+ .preview {
+   overflow: hidden;
+ }
+
+ .col {
+   float: left;
+ }
+
+ .col-6 {
+   width: 50%;
+ }
+
+ .col-3 {
+   width: 25%;
+ }

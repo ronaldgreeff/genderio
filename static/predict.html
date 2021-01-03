@@ -4,10 +4,10 @@
   <head>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/croppie.css" />
+    <link rel="stylesheet" href="css/cropper.min.css" />
     <script src="js/jquery-3.5.1.min.js"></script>
     <script src="js/popper-1.14.7.min.js"></script>
-    <script src="js/croppie.js"></script>
+    <script src="js/cropper.min.js"></script>
     <meta charset="utf-8">
     <title>GenAI</title>
   </head>
@@ -16,14 +16,41 @@
     <!-- <input type="text" name="" value="" id="name-input">
     <button type="button" name="button" id="name-button">Submit</button>
     <p id="greeting"></p> -->
-    <input type="file" name="" value="" id="image-selector">
-    <button type="button" name="button" id="predict-button">Predict</button>
+    <div class="container">
+      <input type="file" name="file" id="image-selector" />
+    </div>
 
-    <p>Predictions</p>
+    <!-- <p>Predictions</p>
     <p>Boy: <span id="boy-prediction"></span> </p>
-    <p>Girl: <span id="girl-prediction"></span> </p>
+    <p>Girl: <span id="girl-prediction"></span> </p> -->
 
-    <img class="my-img" src="" alt="" id="selected-image" />
+    <div class="container">
+      <div class="row">
+        <div class="col col-3">
+          <div class="image-container">
+            <img class="" src="" alt="" id="image" />
+          </div>
+        </div>
+        <div class="col col-3">
+
+        </div>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <form method="post" action="" enctype="multipart/form-data" id="myform">
+        <div class="preview" id="file">
+        </div>
+          <span><input type="text" name="weeks" value="0"><input type="text" name="days" value="0"></span>
+        <div>
+          <input type="button" class="button" value="Predict" id="but_upload">
+          <!-- <button type="button" class="button" name="button" id="predict-button">Predict</button> -->
+        </div>
+      </form>
+    </div>
+
+
 
     <!-- TODO: Add dropping tool with preset dimensions: https://foliotek.github.io/Croppie/ -->
 
@@ -42,16 +69,38 @@
     //   })
     // })
 
+    // IMAGE CROP
+    function crop_image(){
+      const image = document.getElementById("image");
+      var height = image.height() + 4;
+
+
+      const cropper = new Cropper(image, {
+        viewMode: 2,
+        dragMode: 'move',
+        initialAspectRatio: 16 / 9,
+        preview: '.preview', //document.getElementById("image-preview"),
+        scalable: false,
+        zoomable: false,
+        zoomOnTouch: false,
+        crop(event) {
+          // console.log(event.detail.x);
+          // console.log(event.detail.y);
+        },
+      });
+    }
+
     // IMAGE SELECTION
     let base64Image;
     $("#image-selector").change(function(){
       let reader = new FileReader();
       reader.onload = function(e) {
         let dataURL = reader.result;
-        $("#selected-image").attr("src", dataURL);
+        $("#image").attr("src", dataURL);
         base64Image = dataURL.replace("data:image/jpeg;base64,", ""); // strip out meta data
-        console.log(base64Image);
+        crop_image()
       }
+
       reader.readAsDataURL($("#image-selector")[0].files[0]);
       $("boy-prediction").text("");
       $("girl-prediction").text("");
