@@ -10,8 +10,9 @@ from flask import request
 from flask import jsonify
 from flask import Flask
 
-
+# TODO: just here for the keras tutorial
 from keras.applications import ResNet50
+from keras.applications import imagenet_utils
 
 
 app = Flask(__name__)
@@ -20,7 +21,8 @@ model = None
 def get_model():
     print(" * Loading keras model...")
     global model
-    # model = load_model("models/keras_xception_15016_lr0.001initial_E1LR0.001.h5")
+    # model = load_model(models/my_model)
+    # model.load_weights(models/my_weights)
     model = ResNet50(weights="imagenet")
     print("* Model loaded")
 
@@ -36,22 +38,26 @@ def prepare_image(image, target_size):
 @app.route("/predict", methods=["POST"])
 def predict():
     data = {"success": False}
-
     if request.method == "POST":
-        message = request.get_json(force=True)
-        # image = request.files.get("image")
-        image = message.get("image")
+        # message = request.get_json(force=True)
+        # image = message.get("image")
+        image = request.files.get("image")
+        print(request.files)
         if image:
             # string to PIL format
             image = image.read()
             image = Image.open(io.BytesIO(image))
             # preprocess
-            image = prepare_image(image, 128, 128)
+            image = prepare_image(image, (224, 224))
             # classify image
             preds = model.predict(image)
-            print(preds)
 
-            data["success"] = True
+            # keras tutorial
+            results = imagenet_utils.decode_predictions(preds)
+            data["predictions"] = []
+            for (imagenetID, label, prob) in results[0]:
+                r = {"label": label, "probability": float(prob)}
+                data["predictions"].append(r)
 
             # prediction = preds.tolist()
             # response = {
@@ -60,6 +66,8 @@ def predict():
             #         'girl': prediction[0][1],
             #     }
             # }
+
+            data["success"] = True
             ##################################################################
             # message = request.get_json(force=True)
             # encoded = message['image']
