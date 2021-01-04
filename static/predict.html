@@ -13,46 +13,106 @@
   </head>
 
   <body>
-    <!-- <input type="text" name="" value="" id="name-input">
-    <button type="button" name="button" id="name-button">Submit</button>
-    <p id="greeting"></p> -->
-    <div class="container">
-      <input type="file" name="file" id="image-selector" />
-    </div>
-
-    <!-- <p>Predictions</p>
-    <p>Boy: <span id="boy-prediction"></span> </p>
-    <p>Girl: <span id="girl-prediction"></span> </p> -->
-
+    <!-- INTRO -->
     <div class="container">
       <div class="row">
-        <div class="col col-3">
-          <div class="image-container">
-            <img class="" src="" alt="" id="image" />
-          </div>
-        </div>
-        <div class="col col-3">
-
+        <div class="col col-12">
+          <h1>Welcome</h1>
+          <p>What we do</p>
         </div>
       </div>
     </div>
 
-
+    <!-- IMAGE SELECTION -->
     <div class="container">
-      <form method="post" action="" enctype="multipart/form-data" id="myform">
-        <div class="preview" id="file">
-        </div>
-          <span><input type="text" name="weeks" value="0"><input type="text" name="days" value="0"></span>
-        <div>
-          <input type="button" class="button" value="Predict" id="but_upload">
-          <!-- <button type="button" class="button" name="button" id="predict-button">Predict</button> -->
+      <p>Don't take your photo so close that baby is blurry</p>
+      <p>Take the photo in a well lit room, with your flash off</p>
+      <form >
+        <div class="form-group">
+          <label for="image-selector">Click below to upload</label>
+          <input type="file" class="form-control-file" name="file" id="image-selector">
         </div>
       </form>
     </div>
 
+    <!-- IMAGE CROP -->
+    <div class="container">
+      <div class="row">
+        <!-- CROP AREA -->
+        <div class="col col-6">
+          <div class="image-container">
+            <img class="" src="" alt="" id="image" />
+          </div>
+        </div>
+        <!-- EXAMPLE AREA -->
+        <div class="col col-6">
+          <h6>Pro-tips:</h6>
 
+          <p>Crop your photo until only baby visible in the square below</p>
+          <div class="preview" id="file" style="height: 256px; width: 256px;"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- TODO: Add dropping tool with preset dimensions: https://foliotek.github.io/Croppie/ -->
+    <!-- FORM AREA -->
+    <div class="container">
+      <div class="row">
+        <div class="col col-6">
+
+          <form method="post" action="" enctype="multipart/form-data" id="predictForm">
+
+            <p>How old is baby in the picture?</p>
+
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <input class="form-control" type="text" minlength="1" pattern="[0-9]*" placeholder="weeks" name="weeks">
+                </div>
+                <div class="col">
+                  <input class="form-control" type="text" minlength="1" pattern="[0-9]*" placeholder="days" name="days">
+                </div>
+              </div>
+            </div>
+
+            <p>Do you already know the gender?</p>
+
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="genderRadios" id="radiosUnknown" value="no" checked>
+              <label class="form-check-label" for="radiosUnknown">
+                No
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="genderRadios" id="radiosGirl" value="girl">
+              <label class="form-check-label" for="radiosGirl">
+                Girl
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="genderRadios" id="radiosBoy" value="boy">
+              <label class="form-check-label" for="radiosBoy">
+                Boy
+              </label>
+            </div>
+
+            <p>Could we check how we did in a few months?</p>
+
+            <div class="form-group">
+              <label for="inputEmail">Email address</label>
+              <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+              <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+
+            <div>
+              <input type="button" class="button" value="Predict" id="predict-button">
+              <button type="submit" class="btn btn-primary">Predict</button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
 
   </body>
 
@@ -69,57 +129,104 @@
     //   })
     // })
 
-    // IMAGE CROP
-    function crop_image(){
-      const image = document.getElementById("image");
-      var height = image.height() + 4;
+    // function readURL(input) {
+    //     if (input.files && input.files[0]) {
+    //         var reader = new FileReader();
+    //         reader.onload = function (e) {
+    //             $('#blah').attr('src', e.target.result)
+    //         };
+    //         reader.readAsDataURL(input.files[0]);
+    //         setTimeout(initCropper, 1000);
+    //     }
+    // }
 
+    // IMAGE SELECTION
+    $("#image-selector").change(function() {
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        $("#image").attr("src", reader.result);
+        crop_image();
+      }
+      reader.readAsDataURL($("#image-selector")[0].files[0]);
+    });
+
+    // IMAGE CROP
+    function crop_image(el){
+      const image = document.getElementById("image");
 
       const cropper = new Cropper(image, {
         viewMode: 2,
         dragMode: 'move',
         initialAspectRatio: 16 / 9,
-        preview: '.preview', //document.getElementById("image-preview"),
+        preview: '.preview',
         scalable: false,
         zoomable: false,
         zoomOnTouch: false,
+        center: false,
+        guides: false,
         crop(event) {
-          // console.log(event.detail.x);
-          // console.log(event.detail.y);
         },
       });
+
+      $("#predictForm").on('submit', function(e){
+        e.preventDefault();
+        const base64Image = cropper.getCroppedCanvas().toDataURL();
+        const data = $(this).serialize() + '&image=' + base64Image;
+
+        $.ajax('/predict', {
+          method: "POST",
+          data: data,
+          // processData: false,
+          // contentType: false,
+          success: function(){
+            console.log('success')
+          },
+          error: function(){
+            console.log('bleh')
+          }
+        });
+      });
+
     }
 
-    // IMAGE SELECTION
-    let base64Image;
-    $("#image-selector").change(function(){
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let dataURL = reader.result;
-        $("#image").attr("src", dataURL);
-        base64Image = dataURL.replace("data:image/jpeg;base64,", ""); // strip out meta data
-        crop_image()
-      }
+    //   // PREDICT CLICKED
+    //   $("#predict-button").click(function(event){
+    //     const base64Image = cropper.getCroppedCanvas().toDataURL();
+    //     base64Image
+    //
+    //     cropper.getCroppedCanvas().toBlob(function (blob){
+    //       var formData = new FormData();
+    //       formData['image'] = blob;
+    //       // formData['gender'] = ;
+    //       // formData['email'] = ;
+    //
+    //       $.ajax('/predict', {
+    //         method: "POST",
+    //         data: formData,
+    //         // processData: false,
+    //         // contentType: false,
+    //         success: function(){
+    //           console.log('success')
+    //         },
+    //         error: function(){
+    //           console.log('bleh')
+    //         }
+    //       });
+    //     });
+    //
+    //     let message = {
+    //       image: base64Image
+    //     }
+    //     console.log(message);
+    //
+    //     $.post("/predict", JSON.stringify(message), function(response){
+    //       $("#boy-prediction").text(response.prediction.boy.toFixed(6));
+    //       $("#girl-prediction").text(response.prediction.girl.toFixed(6));
+    //       console.log(response);
+    //     })
+    //   })
+    // }
 
-      reader.readAsDataURL($("#image-selector")[0].files[0]);
-      $("boy-prediction").text("");
-      $("girl-prediction").text("");
-    });
-
-    // IMAGE CROP
-
-    // FORM SUBMIT
-    $("#predict-button").click(function(event){
-      let message = {
-        image: base64Image
-      }
-      console.log(message);
-      $.post("/predict", JSON.stringify(message), function(response){
-        $("#boy-prediction").text(response.prediction.boy.toFixed(6));
-        $("#girl-prediction").text(response.prediction.girl.toFixed(6));
-        console.log(response);
-      })
-    })
   </script>
 
 </html>

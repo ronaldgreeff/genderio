@@ -35,6 +35,8 @@ def prepare_image(image, target_size):
 
     return image
 
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = {"success": False}
