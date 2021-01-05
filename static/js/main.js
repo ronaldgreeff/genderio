@@ -2,12 +2,13 @@ const docReady = (fn) => {
   document.readyState === 'complete' || document.readyState === 'interactive' ? setTimeout(fn, 1) : document.addEventListener('DOMContentLoaded', fn);
 }
 docReady(function() {
-  // window.addEventListener('DOMContentLoaded', function () {
-  var avatar = document.getElementById('avatar');
+
+  var uploadImage = document.getElementById('upload-image');
   var image = document.getElementById('image');
   var input = document.getElementById('input');
   var cropper;
 
+  // FILE UPLOAD LOGIC
   input.addEventListener('change', function(e) {
     var files = e.target.files;
     var done = function(url) {
@@ -55,16 +56,14 @@ docReady(function() {
   // FORM LOGIC
   document.getElementById('predict-button').addEventListener('click', function () {
 
-    var initialAvatarURL;
+    var initialImage;
     var canvas;
 
     if (cropper) {
       canvas = cropper.getCroppedCanvas()
-      initialAvatarURL = avatar.src;
-      avatar.src = canvas.toDataURL();
+      initialImage = uploadImage.src;
+      uploadImage.src = canvas.toDataURL();
       canvas.toBlob(function(blob) {
-
-        console.log(blob.type)
 
         var form = document.forms.namedItem("predict-form");
         var formData = new FormData(form);
@@ -83,7 +82,7 @@ docReady(function() {
           },
 
           error: function (xhr, ajaxOptions, thrownError) {
-            avatar.src = initialAvatarURL;
+            uploadImage.src = initialImage;
             console.log(xhr.status);
             console.log(thrownError);
           },
@@ -91,62 +90,6 @@ docReady(function() {
 
       });
     }
-
-
-    // if (cropper) {
-    //   canvas = cropper.getCroppedCanvas({
-    //     // width: 160,
-    //     // height: 160,
-    //   });
-    //   initialAvatarURL = avatar.src;
-    //   avatar.src = canvas.toDataURL();
-    //   $alert.removeClass('alert-success alert-warning');
-    //   canvas.toBlob(function (blob) {
-    //     var formData = new FormData();
-    //
-    //     formData.append('avatar', blob, 'avatar.jpg');
-    //
-    //     $.ajax('/predict', {
-    //       method: 'POST',
-    //       data: formData,
-    //       processData: false,
-    //       contentType: false,
-    //
-    //       xhr: function () {
-    //         var xhr = new XMLHttpRequest();
-    //
-    //         xhr.upload.onprogress = function (e) {
-    //           var percent = '0';
-    //           var percentage = '0%';
-    //
-    //           if (e.lengthComputable) {
-    //             percent = Math.round((e.loaded / e.total) * 100);
-    //             percentage = percent + '%';
-    //             $progressBar.width(percentage).attr('aria-valuenow', percent).text(percentage);
-    //           }
-    //         };
-    //
-    //         return xhr;
-    //       },
-    //
-    //       success: function (data) {
-    //         $alert.show().addClass('alert-success').text('Upload success');
-    //         console.log(data)
-    //       },
-    //
-    //       error: function (xhr, ajaxOptions, thrownError) {
-    //         avatar.src = initialAvatarURL;
-    //         $alert.show().addClass('alert-warning').text('Upload error');
-    //         console.log(xhr.status);
-    //         console.log(thrownError);
-    //       },
-    //
-    //       complete: function () {
-    //         $progress.hide();
-    //       },
-    //     });
-    //   });
-    // }
   });
 });
 // });
