@@ -142,19 +142,20 @@
 
     // IMAGE SELECTION
     $("#image-selector").change(function() {
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        $("#image").attr("src", reader.result);
-        crop_image();
+      if ($(this)[0].files && $(this)[0].files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          $("#image").attr("src", reader.result);
+        }
+        reader.readAsDataURL($(this)[0].files[0]);
+        setTimeout(initCropper, 1000);
       }
-      reader.readAsDataURL($("#image-selector")[0].files[0]);
     });
 
     // IMAGE CROP
-    function crop_image(el){
-      const image = document.getElementById("image");
-
-      const cropper = new Cropper(image, {
+    function initCropper(el){
+      var image = document.getElementById("image");
+      var cropper = new Cropper(image, {
         viewMode: 2,
         dragMode: 'move',
         initialAspectRatio: 16 / 9,
@@ -170,12 +171,17 @@
 
       $("#predictForm").on('submit', function(e){
         e.preventDefault();
-        const base64Image = cropper.getCroppedCanvas().toDataURL();
-        const data = $(this).serialize() + '&image=' + base64Image;
+
+        formData = new FormData();
+        formData['image'] = cropper.getCroppedCanvas().toDataURL();
+
+        // formData = JSON.stringify(formData)
+        // console.log(formData)
 
         $.ajax('/predict', {
           method: "POST",
-          data: data,
+          data: formData,
+          // dataType: "text",
           // processData: false,
           // contentType: false,
           success: function(){

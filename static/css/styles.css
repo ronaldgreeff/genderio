@@ -73,3 +73,20 @@ img {
  .col-3 {
    width: 25%;
  }
+
+.label {
+  cursor: pointer;
+}
+
+.progress {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.alert {
+  display: none;
+}
+
+.img-container img {
+  max-width: 100%;
+}
