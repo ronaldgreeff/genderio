@@ -47,9 +47,13 @@ def prepare_image(image, target_size):
 
 def get_img_filenumber():
     media = os.path.join(app.root_path, UPLOAD_FOLDER)
-    number = int(os.listdir(media)[-1].split('.')[-2])
-    number += 1
-    return '{:04}'.format(number)
+    media_files = os.listdir(media)
+    if media_files:
+        number = int(media_files[-1].split('.')[-2])
+        number += 1
+        filenumber = '{:04}'.format(number)
+        return filenumber
+    return '{:04}'.format(0)
 
 # def allowed_file(filename):
 #     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -62,10 +66,20 @@ def home(name=None):
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = {"request": request.method}
+
+    data = {"success": False}
+
     data['form'] = request.form
-    file = request.files.get('image')
-    data['image'] = file.filename if file else 'None'
+    image = request.files.get('image')
+
+    if image:
+        imageType = request.form['imageType'].split('/')[-1]
+        if imageType in ALLOWED_EXTENSIONS:
+            filenumber = get_img_filenumber()
+            filepath = os.path.join(app.root_path, UPLOAD_FOLDER, "{}.{}".format(filenumber, imageType))
+            image.save(filepath)
+            data['success'] = True
+
     return jsonify(data)
 
 if __name__ == "__main__":
