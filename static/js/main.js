@@ -64,8 +64,12 @@ docReady(function() {
       avatar.src = canvas.toDataURL();
       canvas.toBlob(function(blob) {
 
+        console.log(blob.type)
+
         var form = document.forms.namedItem("predict-form");
         var formData = new FormData(form);
+
+        formData.append('imageType', blob.type);
         formData.append("image", blob);
 
         $.ajax('/predict', {
