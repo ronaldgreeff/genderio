@@ -12,6 +12,7 @@ class Config:
     TEMPLATES_FOLDER = 'templates'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     UPLOAD_FOLDER = 'media'
+    # SQLALCHEMY_DATABASE_URI
 
 
 class ProdConfig(Config):
