@@ -17,6 +17,12 @@
 
   <body>
 
+    <header class="text-white text-center">
+        <h1 class="display-4">InstaGender</h1>
+        <p class="lead mb-0">The <strong>fastest</strong>, most <strong>accurate</strong> gender determination.</p>
+        <p class="mb-5"></p>
+    </header>
+
     <!-- IMAGE UPLOAD -->
     <div class="container">
       <label class="label" data-toggle="tooltip" title="Upload your baby's picture">
@@ -26,8 +32,22 @@
       <img id="upload-image" src="" alt="upload-image" style="display: none">
     </div>
 
-    <div class="img-container">
-      <img id="image" src="">
+    <div class="container">
+      <div class="row">
+        <!-- CROP AREA -->
+        <div class="col col-6">
+          <div class="image-container">
+            <img class="" src="" alt="" id="image" />
+          </div>
+        </div>
+        <!-- EXAMPLE AREA -->
+        <div class="col col-6">
+          <h3>Beautiful!</h3>
+
+          <p>Now, to ensure the most accurate prediction, crop the photo so that only baby is visible below.</p>
+          <div class="preview" id="file" style="height: 256px; width: 256px;"></div>
+        </div>
+      </div>
     </div>
 
     <!-- FORM -->

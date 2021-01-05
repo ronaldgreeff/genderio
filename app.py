@@ -55,9 +55,6 @@ def get_img_filenumber():
         return filenumber
     return '{:04}'.format(0)
 
-# def allowed_file(filename):
-#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-################################################################################
 
 
 @app.route("/",methods=["GET"])
@@ -78,6 +75,8 @@ def predict():
             filenumber = get_img_filenumber()
             filepath = os.path.join(app.root_path, UPLOAD_FOLDER, "{}.{}".format(filenumber, imageType))
             image.save(filepath)
+
+            # data['prediction'] = predict(image)
             data['success'] = True
 
     return jsonify(data)
