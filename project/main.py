@@ -10,7 +10,7 @@ from flask import Blueprint
 
 main = Blueprint('main', __name__)
 
-# disabled for now
+# keras disabled for now
 # from .helpers_keras import fetch_model
 # model = fetch_model()
 
