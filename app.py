@@ -1,6 +1,6 @@
 import os
-from helpers_keras import *
-from helpers_utils import *
+import helpers_keras
+import helpers_utils
 from flask import Flask, request
 from flask import jsonify
 from flask import render_template
@@ -9,7 +9,7 @@ from flask import render_template
 app = Flask(__name__)
 app.config.from_object('config.Config')
 
-model = fetch_model()
+model = helpers_keras.fetch_model()
 
 
 @app.route("/",methods=["GET"])
@@ -25,16 +25,7 @@ def predict():
     image = request.files.get('image')
     image_type = request.form.get('imageType')
 
-    # if image:
-    #     imageType = request.form['imageType'].split('/')[-1]
-    #     if imageType in ALLOWED_EXTENSIONS:
-    #         filenumber = get_img_filenumber()
-    #         filepath = os.path.join(app.root_path, UPLOAD_FOLDER, "{}.{}".format(filenumber, imageType))
-    #         image.save(filepath)
-
-    # data['prediction'] = predict(image)
-
-    img = save_image(image, image_type)
+    img = helpers_utils.save_image(image, image_type)
     if img:
         data['success'] = True
 
