@@ -8,17 +8,23 @@
                 <figure><img src="" alt="sing up image"></figure>
                 <a href="#" class="signup-image-link">Create an account</a>
             </div>
-
             <div class="signin-form">
                 <h2 class="form-title">Sign in</h2>
-                <form method="POST" class="register-form" id="login-form">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+                {% endwith %}
+                <form method="POST" class="register-form" id="login-form" action="/signin">
                     <div class="form-group">
-                        <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                        <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>
+                        <label for="email"><i class="zmdi zmdi-email"></i></label>
+                        <input type="text" name="email" id="email" placeholder="Your Email"/>
                     </div>
                     <div class="form-group">
-                        <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
-                        <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
+                        <label for="password"><i class="zmdi zmdi-lock"></i></label>
+                        <input type="password" name="password" id="password" placeholder="Password"/>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />

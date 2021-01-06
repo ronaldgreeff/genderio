@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
+from flask_login import login_user, logout_user, login_required, current_user
 
 # app = Flask(__name__)
 # app.config.from_object('config.Config')
@@ -16,8 +17,9 @@ main = Blueprint('main', __name__)
 
 
 @main.route("/",methods=["GET"])
-def index(name=None):
-    return render_template("index.html", name=name)
+@login_required
+def index():
+    return render_template("index.html", name=current_user.name)
 
 @main.route("/predict", methods=["POST"])
 def predict():
