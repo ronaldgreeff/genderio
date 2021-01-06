@@ -16,7 +16,7 @@ main = Blueprint('main', __name__)
 
 
 @main.route("/",methods=["GET"])
-def home(name=None):
+def index(name=None):
     return render_template("index.html", name=name)
 
 @main.route("/predict", methods=["POST"])
