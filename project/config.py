@@ -14,8 +14,8 @@ class Config:
     TEMPLATES_FOLDER = 'templates'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
     UPLOAD_FOLDER = 'media'
-    # SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
-
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class ProdConfig(Config):
     FLASK_ENV = 'production'
