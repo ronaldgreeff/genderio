@@ -3,13 +3,13 @@ from . import db
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login')
+@auth.route('/signin')
 def login():
-    return render_template("login.html")
+    return render_template("signin.html")
 
 @auth.route('/signup')
 def signup():
-    return 'Signup'
+    return render_template("signup.html")
 
 @auth.route('/logout')
 def logout():
