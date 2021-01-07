@@ -27,7 +27,7 @@ def signin():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('main.dashboard'))
+            return redirect(next_page or url_for('main.dashboard', user_id= user.id))
         flash('Invalid username/password combination')
         return redirect(url_for('auth.signin'))
     return render_template(

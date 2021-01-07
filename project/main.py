@@ -19,11 +19,12 @@ main = Blueprint('main', __name__)
 def index():
     return render_template("welcome.html")
 
+
 @main.route("/<user_id>", methods=["GET", "POST"])
 @login_required
 def dashboard(user_id):
     # get user's babies and each baby's imgs
-    return render_template("dashboard.html", name=current_user.name)
+    return render_template("dashboard.html")
 
 
 @main.route("/predict", methods=["POST"])
