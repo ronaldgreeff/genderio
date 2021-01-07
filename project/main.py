@@ -6,8 +6,7 @@ from flask import render_template
 from flask import Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 
-# app = Flask(__name__)
-# app.config.from_object('config.Config')
+from . import db
 
 main = Blueprint('main', __name__)
 
@@ -17,10 +16,14 @@ main = Blueprint('main', __name__)
 
 
 @main.route("/", methods=["GET"])
-@login_required
 def index():
-    db = get_db()
-    return render_template("index.html", name=current_user.name, babies=babies)
+    return render_template("welcome.html")
+
+@main.route("/<user_id>", methods=["GET", "POST"])
+@login_required
+def dashboard(user_id):
+    # get user's babies and each baby's imgs
+    return render_template("dashboard.html", name=current_user.name)
 
 
 @main.route("/predict", methods=["POST"])
