@@ -19,7 +19,8 @@ main = Blueprint('main', __name__)
 @main.route("/", methods=["GET"])
 @login_required
 def index():
-    return render_template("index.html", name=current_user.name)
+    db = get_db()
+    return render_template("index.html", name=current_user.name, babies=babies)
 
 
 @main.route("/predict", methods=["POST"])

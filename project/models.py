@@ -75,6 +75,18 @@ class Baby(db.Model):
         unique=False,
         nullable=True
     )
+    gender = db.Column(
+        db.String(1),
+        nullable=False,
+        unique=False,
+        default='u',
+    )
+    predicted_gender = db.Column(
+        db.String(1),
+        nullable=True,
+        unique=False,
+        default='u',
+    )
     parent_id = db.Column(db.Integer, db.ForeignKey('user.id'),)
     images = db.relationship('BabyImg', backref='baby', lazy=True,)
 

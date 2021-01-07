@@ -4,7 +4,7 @@ from flask import (Blueprint, render_template, redirect, url_for, request,
 from flask_login import login_required, logout_user, current_user, login_user
 from .models import User
 from . import db
-from .forms import SigninForm, SignupForm
+from .auth_forms import SigninForm, SignupForm
 
 auth = Blueprint('auth', __name__)
 

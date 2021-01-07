@@ -8,7 +8,6 @@ from wtforms.validators import (
     Optional
 )
 
-
 class SignupForm(FlaskForm):
     """User Sign-up Form."""
     name = StringField(
@@ -36,10 +35,6 @@ class SignupForm(FlaskForm):
             DataRequired(),
             EqualTo('password', message='Passwords must match.')
         ]
-    )
-    website = StringField(
-        'Website',
-        validators=[Optional()]
     )
     submit = SubmitField('Register')
 
