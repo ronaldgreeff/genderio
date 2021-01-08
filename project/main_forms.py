@@ -1,26 +1,41 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, DateTimeField, SubmitField
+from wtforms import (StringField, DateField, SubmitField, HiddenField,)
 from wtforms.validators import (
     DataRequired,
     Email,
     EqualTo,
     Optional
 )
-
-class BabyForm(FlaskForm):
-    """User Sign-up Form."""
+class NewBabyForm(FlaskForm):
+    """Add a baby"""
     name = StringField(
         'Name',
         validators=[Optional()]
     )
-    dob = DateTimeField(
+    dob = DateField(
         'Date of Birth',
+        format='%Y-%m-%d',
         validators=[
             DataRequired()
         ]
     )
-    gender = StringField(
-        'Gender',
-        validators=[DataRequired()]
+    add = SubmitField('Add')
+
+class UpdateBabyForm(FlaskForm):
+    """Update a baby"""
+    id = HiddenField(
+        ''
     )
-    submit = SubmitField('Predict')
+    name = StringField(
+        'Name',
+        validators=[Optional()]
+    )
+    dob = DateField(
+        'Date of Birth',
+        # format='%Y-%m-%d',
+        format='%d-%m-%Y',
+        validators=[
+            DataRequired()
+        ]
+    )
+    update = SubmitField('Update')

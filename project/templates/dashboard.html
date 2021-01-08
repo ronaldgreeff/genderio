@@ -5,7 +5,30 @@
     Welcome, {{ name }}!
   </h1>
 
-for baby in babies...
-+ BabyForm
+{{ babies }}
+{% for baby in babies %}
+<form method="POST" action="/update_baby">
+
+</form>
+
+{% include 'image_uploader.html' %}
+
+{% endfor %}
+
+<form method="POST" action="/dashboard">
+  {{ new.csrf_token }}
+  <fieldset class="name">
+    {{ new.name.label }}
+    {{ new.name(placeholder="Baby's Name") }}
+  </fieldset>
+  <fieldset class="dob">
+    {{ new.dob.label }}
+    {{ new.dob }}
+  </fieldset>
+  <div class="submit-button">
+    {{ new.add }}
+  </div>
+
+</form>
 
 {% endblock %}

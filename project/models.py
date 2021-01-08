@@ -6,7 +6,7 @@ from . import db
 class User(UserMixin, db.Model):
     """User account model."""
 
-    __tablename__ = 'user'
+    __tablename__ = 'parents'
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -39,7 +39,7 @@ class User(UserMixin, db.Model):
         unique=False,
         nullable=True
     )
-    babies = db.relationship('Baby', backref='user', lazy=True,)
+    babies = db.relationship('Baby', backref='parent', lazy=True,)
 
     def set_password(self, password):
         """Create hashed password."""
@@ -59,7 +59,7 @@ class User(UserMixin, db.Model):
 class Baby(db.Model):
     """Baby model"""
 
-    __tablename__ = 'baby'
+    __tablename__ = 'babies'
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -70,7 +70,7 @@ class Baby(db.Model):
         unique=False
     )
     dob = db.Column(
-        db.DateTime,
+        db.Date,
         index=False,
         unique=False,
         nullable=True
@@ -87,7 +87,7 @@ class Baby(db.Model):
         unique=False,
         default='u',
     )
-    parent_id = db.Column(db.Integer, db.ForeignKey('user.id'),)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'),)
     images = db.relationship('BabyImg', backref='baby', lazy=True,)
 
     def __repr__(self):
@@ -97,7 +97,7 @@ class Baby(db.Model):
 class BabyImg(db.Model):
     """Baby picture model"""
 
-    __tablename__ = 'babyimg'
+    __tablename__ = 'babypics'
     id = db.Column(
         db.Integer,
         primary_key=True
@@ -117,7 +117,7 @@ class BabyImg(db.Model):
         nullable=False,
         unique=False
     )
-    baby_id = db.Column(db.Integer, db.ForeignKey('baby.id'))
+    baby_id = db.Column(db.Integer, db.ForeignKey('babies.id'))
 
     def __repr__(self):
         return '<Img {}>'.format(self.filename)
