@@ -60,8 +60,9 @@ def make_baby(user_id, baby_id):
 
 @main.route("/upload_img", methods=["POST"])
 @login_required
-def upload_img(user_id):
+def upload_img():
     data = {}
+    print(request.form)
     return jsonify(data)
 
 

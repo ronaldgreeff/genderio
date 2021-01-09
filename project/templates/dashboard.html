@@ -1,19 +1,171 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="title">
-    Welcome, {{ name }}!
-  </h1>
 
-{{ babies }}
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="img-container">
+          <img id="image" src="https://avatars0.githubusercontent.com/u/3456749">
+        </div>
+        <!-- <div class="preview" id="file" style="height: 256px; width: 256px;"></div> -->
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="crop">Crop</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% for baby in babies %}
-<form method="POST" action="/update_baby">
 
+<form method="POST" action="/update_baby" data-id={{ baby.data.baby.id }}>
 </form>
 
-{% include 'image_uploader.html' %}
+<div class="image-inputs-{{ loop.index0 }}">
+  <label class="label" id="upload_input-{{ loop.index0 }}-0">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-0" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-0" name="image-{{ loop.index0 }}-0" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+  <label class="label" id="upload_input-{{ loop.index0 }}-1">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-1" src="" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-1" name="image-{{ loop.index0 }}-1" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+  <label class="label" id="upload_input-{{ loop.index0 }}-2">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-2" src="" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-2" name="image-{{ loop.index0 }}-2" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+  <label class="label" id="upload_input-{{ loop.index0 }}-3">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-3" src="" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-3" name="image-{{ loop.index0 }}-3" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+  <label class="label" id="upload_input-{{ loop.index0 }}-4">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-4" src="" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-4" name="image-{{ loop.index0 }}-4" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+  <label class="label" id="upload_input-{{ loop.index0 }}-5">
+    <img class="rounded" id="avatar-{{ loop.index0 }}-5" src="" alt="avatar">
+    <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-5" name="image-{{ loop.index0 }}-5" accept="image/*">
+    <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
+  </label>
+</div>
+<script src="https://unpkg.com/bootstrap@4/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+  let $modal = $('#modal');
+
+  $(".image-inputs-{{ loop.index0 }}").children().each(function(){
+    this.addEventListener("click", function(){
+      let avatar = this.firstElementChild;
+      let input = avatar.nextElementSibling;
+      let image = document.getElementById('image');
+      let cropper;
+
+      input.addEventListener('change', function(e) {
+        var files = e.target.files;
+        var done = function(url) {
+          input.value = '';
+          image.src = url;
+          $modal.modal('show');
+        };
+        var reader;
+        var file;
+        var url;
+
+        if (files && files.length > 0) {
+          file = files[0]
+
+          if (URL) {
+            done(URL.createObjectURL(file));
+          } else if (FileReader) {
+            reader = new FileReader();
+            reader.onload = function(e) {
+              done(reader.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      });
+
+      // on modal shown/hidden create/destroy cropper
+      $modal.on('shown.bs.modal', function () {
+        cropper = new Cropper(image, {
+          viewMode: 2,
+          dragMode: 'move',
+          initialAspectRatio: 16 / 9,
+          preview: '.preview',
+          scalable: false,
+          zoomable: false,
+          zoomOnTouch: false,
+          center: false,
+          guides: false,
+        });
+      }).on('hidden.bs.modal', function () {
+        cropper.destroy();
+        cropper = null;
+      });
+
+      // on crop
+      document.getElementById('crop').addEventListener('click', function() {
+        var initialImage;
+        var canvas;
+
+        $modal.modal('hide');
+
+        if (cropper) {
+
+          canvas = cropper.getCroppedCanvas();
+          initialImage = avatar.src;
+          avatar.src = canvas.toDataURL();
+
+          canvas.toBlob(function(blob) {
+            var formData = new FormData();
+
+            formData.append('imageType', blob.type);
+            formData.append("image", blob);
+            formData.append()
+
+            $.ajax('/upload_img', {
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+
+                success: function (data) {
+                  console.log(data)
+                },
+
+                error: function (xhr, ajaxOptions, thrownError) {
+                  uploadImage.src = initialImage;
+                  console.log(xhr.status);
+                  console.log(thrownError);
+                },
+              });
+
+          });
+        };
+      });
+
+  });
+});
+</script>
 
 {% endfor %}
+
 
 <form method="POST" action="/dashboard">
   {{ new.csrf_token }}
