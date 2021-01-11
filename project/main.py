@@ -1,5 +1,5 @@
 import os
-from .helpers_utils import save_image, dtdob
+from .helpers_utils import get_img_filename, save_image, dtdob
 from flask import Flask, request
 from flask import jsonify
 from flask import render_template
@@ -45,9 +45,8 @@ def dashboard():
         db.session.commit()
 
     babies = db.session.query(Baby).filter(Baby.parent_id==current_user.id).all()
-
-    babies = [{'data': {'baby': baby, 'babypics': baby.images}, 'form': UpdateBabyForm()} for baby in babies]
-
+    # babies = [{'data': {'baby': baby, 'babypics': baby.images}, 'form': UpdateBabyForm()} for baby in babies]
+    babies = [{'baby': baby, 'babypics': baby.images, 'form': UpdateBabyForm()} for baby in babies]
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
 
 
@@ -61,8 +60,37 @@ def make_baby(user_id, baby_id):
 @main.route("/upload_img", methods=["POST"])
 @login_required
 def upload_img():
-    data = {}
-    print(request.form)
+    data = {'success': False, 'error': None}
+
+    image = request.files.get('image')
+    image_type = request.form.get('imageType')
+    baby_id = request.form.get('baby_id')
+    weeks = request.form.get('weeks')
+    days = request.form.get('days')
+
+    baby = Baby.query.get(baby_id)
+
+    if baby:
+        if baby.parent_id == current_user.id:
+            filename = get_img_filename(current_user.id)
+            baby_img = BabyImg(
+                filename=filename,
+                baby_id=baby.id,
+                weeks=weeks,
+                days=days,
+            )
+            db.session.add(baby_img)
+            db.session.commit()
+
+            filepath = save_image(image, image_type, filename)
+            data['success'] = True
+            data['src'] = filepath
+        else:
+            data['error'] = "Parent ID does not match parent ID of baby"
+    else:
+        data['error'] = "No baby found with that ID"
+
+
     return jsonify(data)
 
 

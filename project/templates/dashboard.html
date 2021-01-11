@@ -16,7 +16,18 @@
           <img id="hidden_image" src="https://avatars0.githubusercontent.com/u/3456749">
         </div>
         <!-- <div class="preview" id="file" style="height: 256px; width: 256px;"></div> -->
-    </div>
+      </div>
+      <div class="modal-baby-age">
+        <h6>How old is baby in the picture?</h6>
+        <label for="weeks-old">
+          <p>weeks</p>
+          <input type="text" name="weeks-old" value="0" id="baby-weeks-old">
+        </label>
+        <label for="days-old">
+          <p>days</p>
+          <input type="text" name="days-old" value="0" id="baby-days-old">
+        </label>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="crop">Crop</button>
@@ -27,37 +38,37 @@
 
 {% for baby in babies %}
 
-<div class="baby-wrapper" data-id={{ baby.data.baby.id }}>
+<div class="baby-wrapper" data-id={{ baby.baby.id }}>
   <form method="POST" action="/update_baby" >
   </form>
 
   <div class="image-inputs-wrapper" id="image-input-{{ loop.index0 }}">
-    <label class="label" id="upload_input-{{ loop.index0 }}-0" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-0" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-0" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 0">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-0" name="image-{{ loop.index0 }}-0" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
     </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-1" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-1" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-1" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 1">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-1" name="image-{{ loop.index0 }}-1" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
     </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-2" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-2" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-2" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 2">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-2" name="image-{{ loop.index0 }}-2" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
     </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-3" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-3" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-3" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 3">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-3" name="image-{{ loop.index0 }}-3" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
     </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-4" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-4" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-4" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 4">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-4" name="image-{{ loop.index0 }}-4" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
     </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-5" data-id={{ baby.data.baby.id }}>
+    <label class="label" id="upload_input-{{ loop.index0 }}-5" data-id={{ baby.baby.id }}>
       <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-5" src="https://avatars0.githubusercontent.com/u/3456749?s=160" alt="baby {{ loop.index0 }} upload thumbmail 5">
       <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-5" name="image-{{ loop.index0 }}-5" accept="image/*">
       <!-- <img id="upload-image" src="" alt="upload-image" style="display: none"> -->
@@ -98,19 +109,23 @@
     $modal.modal('hide');
 
     if (cropper) {
-      canvas = cropper.getCroppedCanvas();
-      upload_img = document.getElementById(hidden_image.dataset.backref)
-      baby_id = $(upload_img).parents().eq(2)[0].dataset.id
+      let canvas = cropper.getCroppedCanvas();
+      let upload_img = document.getElementById(hidden_image.dataset.backref);
+      let baby_id = $(upload_img).parents().eq(2)[0].dataset.id
+      let weeks_old = document.getElementById('baby-weeks-old');
+      let days_old = document.getElementById('baby-days-old');
 
       initialImage = upload_img.src;
       upload_img.src = canvas.toDataURL();
 
       canvas.toBlob(function(blob) {
-        var formData = new FormData();
+        let formData = new FormData();
 
         formData.append('imageType', blob.type);
         formData.append("image", blob);
         formData.append("baby_id", baby_id);
+        formData.append("weeks", weeks_old);
+        formData.append("days", days_old);
 
         $.ajax('/upload_img', {
             method: 'POST',
