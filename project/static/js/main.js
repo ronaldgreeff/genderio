@@ -4,7 +4,7 @@ const docReady = (fn) => {
 
 docReady(function() {
 
-  $('#dob').datepicker({
+  $('.pickdate').datepicker({
     format: 'dd-mm-yyyy',
   });
 

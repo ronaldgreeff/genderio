@@ -45,8 +45,7 @@ def dashboard():
         db.session.commit()
 
     babies = db.session.query(Baby).filter(Baby.parent_id==current_user.id).all()
-    # babies = [{'data': {'baby': baby, 'babypics': baby.images}, 'form': UpdateBabyForm()} for baby in babies]
-    babies = [{'baby': baby, 'babypics': baby.images, 'form': UpdateBabyForm()} for baby in babies]
+    babies = [{'baby': baby, 'babypics': baby.images, 'updateform': UpdateBabyForm(id=baby.id)} for baby in babies]
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
 
 
