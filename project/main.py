@@ -21,8 +21,10 @@ main = Blueprint('main', __name__)
 
 # todo: should serve static files with nginx
 @main.route("/media/<filename>", methods=["GET"])
+@login_required
 def send_media(filename):
     return send_from_directory('media', filename)
+
 
 @main.route("/", methods=["GET"])
 def index():
@@ -49,7 +51,11 @@ def dashboard():
         db.session.commit()
 
     babies = db.session.query(Baby).filter(Baby.parent_id==current_user.id).all()
-    babies = [{'baby': baby, 'babypics': baby.images, 'updateform': UpdateBabyForm(id=baby.id)} for baby in babies]
+    babies = [{
+            'baby': baby,
+            'babypics': [b.filepath for b in baby.images[:5]],
+            'updateform': UpdateBabyForm(id=baby.id)}
+        for baby in babies]
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
 
 
@@ -75,9 +81,10 @@ def upload_img():
 
     if baby:
         if baby.parent_id == current_user.id:
-            filename = get_img_filename(current_user.id)
+            uid = get_img_filename(current_user.id)
+            partial_filepath = save_image(image, image_type, uid)
             baby_img = BabyImg(
-                filename=filename,
+                filepath=partial_filepath,
                 baby_id=baby.id,
                 weeks=weeks,
                 days=days,
@@ -85,9 +92,9 @@ def upload_img():
             db.session.add(baby_img)
             db.session.commit()
 
-            filepath = save_image(image, image_type, filename)
+            # filepath = save_image(image, image_type, filename)
             data['success'] = True
-            data['src'] = filepath
+            data['src'] = partial_filepath
         else:
             data['error'] = "Parent ID does not match parent ID of baby"
     else:
