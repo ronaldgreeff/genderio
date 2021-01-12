@@ -100,13 +100,15 @@
   </div>
 </div>
 
-<div class="predict-result-wrapper">
-  <h1>BOY</h1>
+<div class="prediction-wrapper">
+  <div class="predict-result">
+    <h1 id="prediction-result-{{ baby.baby.id }}">BOY</h1>
+  </div>
+  <div class="predict-button">
+    <button type="button" class="btn btn-primary" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
+  </div>
 </div>
 
-<div class="predict-button">
-  <button type="button" class="btn btn-primary" name="button" id="predict-button-{{ baby.baby.id }}">Predict</button>
-</div>
 {% endfor %}
 
 <!-- NewBabyForm -->
@@ -153,7 +155,6 @@
         },
 
         error: function (xhr, ajaxOptions, thrownError) {
-          upload_img.src = initialImage;
           console.log(xhr.status);
           console.log(thrownError);
         },
@@ -164,7 +165,24 @@
   // PREDICTION
   /////////////////////////////////
 
-  // $('.predict-button').children()
+  $('.predict-button').children().on('click', function() {
+    let formData = new FormData();
+    formData.append("id", this.dataset.id);
+    $.ajax('/predict', {
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+
+      success: function(data) {
+        console.log(data)
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(xhr.status);
+        console.log(thrownError);
+      },
+    })
+  });
 
   // IMAGE UPLOAD
   /////////////////////////////////
