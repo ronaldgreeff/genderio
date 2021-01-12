@@ -42,7 +42,7 @@
 <div class="baby-wrapper" data-id={{ baby.baby.id }}>
 
   <!-- UPDATE FORM -->
-  <form method="POST" action="/update_baby" >
+  <form method="POST" action="" >
     <div class="name">
       {{ baby.updateform.name.label }}
       {{ baby.updateform.name(
@@ -61,7 +61,7 @@
     <div class="id">
       {{ baby.updateform.id(id="update-id-" + baby.baby.id|string) }}
     </div>
-    <div class="submit-button">
+    <div class="submit-button submit-update">
       {{ baby.updateform.update(id="update-button-" + baby.baby.id|string) }}
     </div>
   </form>
@@ -120,7 +120,7 @@
     {{ new.dob.label }}
     {{ new.dob(class="pickdate") }}
   </fieldset>
-  <div class="submit-button">
+  <div class="submit-button submit-new">
     {{ new.add }}
   </div>
 </form>
@@ -130,10 +130,41 @@
 <script src="static/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
+  // UPDATE
+  /////////////////////////////////
+  $('.submit-update').on('click', function(e) {
+    e.preventDefault();
+    let form = this.parentElement;
+    formData = new FormData();
+    formData.append('name', form.name.value)
+    formData.append('dob', form.dob.value)
+    formData.append('id', form.id.value)
+
+    $.ajax('/update_baby', {
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+
+        success: function (data) {
+          if (data.success != true) {
+            console.log(data.error) // todo
+          }
+        },
+
+        error: function (xhr, ajaxOptions, thrownError) {
+          upload_img.src = initialImage;
+          console.log(xhr.status);
+          console.log(thrownError);
+        },
+      });
+
+  });
+
   // PREDICTION
   /////////////////////////////////
 
-  $('.predict-button').children()
+  // $('.predict-button').children()
 
   // IMAGE UPLOAD
   /////////////////////////////////

@@ -19,12 +19,6 @@ main = Blueprint('main', __name__)
 # from .helpers_keras import fetch_model
 # model = fetch_model()
 
-# todo: should serve static files with nginx
-@main.route("/media/<filename>", methods=["GET"])
-@login_required
-def send_media(filename):
-    return send_from_directory('media', filename)
-
 
 @main.route("/", methods=["GET"])
 def index():
@@ -61,7 +55,7 @@ def dashboard():
 
 @main.route("/update_baby", methods=["POST"])
 @login_required
-def make_baby():
+def update_baby():
 
     data = {'success': False, 'error': None}
 
@@ -77,6 +71,12 @@ def make_baby():
                 baby.dob = dob
 
                 db.session.commit()
+
+                data['success'] = True
+            else:
+                data['error'] = "Parent ID does not match parent ID of baby"
+        else:
+            data['error'] = "No baby found with that ID"
 
     return jsonify(data)
 
@@ -125,6 +125,12 @@ def upload_img():
 def predict(user_id, baby_id):
     data = {}
     return data
+
+# todo: should serve static files with nginx
+@main.route("/media/<filename>", methods=["GET"])
+@login_required
+def send_media(filename):
+    return send_from_directory('media', filename)
 
 # @main.route("/predict", methods=["POST"])
 # @login_required
