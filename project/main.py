@@ -1,6 +1,6 @@
 import os
 from .helpers_utils import get_img_filename, save_image, dtdob
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
@@ -19,6 +19,10 @@ main = Blueprint('main', __name__)
 # from .helpers_keras import fetch_model
 # model = fetch_model()
 
+# todo: should serve static files with nginx
+@main.route("/media/<filename>", methods=["GET"])
+def send_media(filename):
+    return send_from_directory('media', filename)
 
 @main.route("/", methods=["GET"])
 def index():

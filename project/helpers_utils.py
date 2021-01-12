@@ -25,10 +25,11 @@ def save_image(image, image_type, filename):
     if image and image_type:
         image_type = image_type.split('/')[-1]
         if image_type in app.config['ALLOWED_EXTENSIONS']:
-            filepath = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], "{}.{}".format(filename, image_type))
+            partial_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "{}.{}".format(filename, image_type))
+            filepath = os.path.join(app.root_path, partial_filepath)
             image.save(filepath)
 
-            return filepath
+            return partial_filepath
 
 
 def dtdob(str_time, format='%d-%m-%Y'):
