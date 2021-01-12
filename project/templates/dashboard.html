@@ -41,6 +41,7 @@
 
 <div class="baby-wrapper" data-id={{ baby.baby.id }}>
 
+  <!-- UPDATE FORM -->
   <form method="POST" action="/update_baby" >
     <div class="name">
       {{ baby.updateform.name.label }}
@@ -53,7 +54,7 @@
       {{ baby.updateform.dob.label }}
       {{ baby.updateform.dob(
         id="update-dob-" + baby.baby.id|string,
-        value=baby.baby.dob,
+        value=baby.baby.dob.strftime('%d-%m-%Y'),
         class="pickdate",
       ) }}
     </div>
@@ -132,9 +133,7 @@
   // PREDICTION
   /////////////////////////////////
 
-  // $('.predict-button').children() {
-  //
-  // }
+  $('.predict-button').children()
 
   // IMAGE UPLOAD
   /////////////////////////////////

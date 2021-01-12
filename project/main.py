@@ -61,14 +61,30 @@ def dashboard():
 
 @main.route("/update_baby", methods=["POST"])
 @login_required
-def make_baby(user_id, baby_id):
-    data = {}
+def make_baby():
+
+    data = {'success': False, 'error': None}
+
+    if request.method == "POST":
+        baby_id = request.form.get('id')
+        name = request.form.get('name')
+        dob = dtdob(request.form.get('dob'))
+
+        baby = Baby.query.get(baby_id)
+        if baby:
+            if baby.parent_id == current_user.id:
+                baby.name = name
+                baby.dob = dob
+
+                db.session.commit()
+
     return jsonify(data)
 
 
 @main.route("/upload_img", methods=["POST"])
 @login_required
 def upload_img():
+
     data = {'success': False, 'error': None}
 
     image = request.files.get('image')
