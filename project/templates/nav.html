@@ -3,14 +3,17 @@
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
     </li>
+    {% if current_user.is_authenticated %}
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+    </li>
+    {% else %}
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('auth.signin') }}">Login</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign Up</a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-    </li>
+    {% endif %}
   </ul>
 </nav>

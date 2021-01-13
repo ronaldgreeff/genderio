@@ -13,67 +13,96 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="instruction-wrapper display-flex-center mb-3">
+          <p class="instruction">Crop the image so that only baby is in the square</p>
+        </div>
         <div class="img-container">
           <img id="hidden_image" src="">
         </div>
       </div>
       <div class="modal-baby-age">
-        <h6>How old is baby in the picture?</h6>
-        <label for="weeks-old">
-          <p>weeks</p>
-          <input type="text" name="weeks-old" value="0" id="baby-weeks-old">
-        </label>
-        <label for="days-old">
-          <p>days</p>
-          <input type="text" name="days-old" value="0" id="baby-days-old">
-        </label>
+        <h6 class="text-center">How old is baby in the picture?</h6>
+        <div class="row">
+          <div class="col">
+            <label for="weeks-old">
+              <p>Weeks</p>
+              <input class="form-control form-control-lg" type="text" name="weeks-old" value="0" id="baby-weeks-old">
+            </label>
+          </div>
+          <div class="col">
+            <label for="days-old">
+              <p>Days</p>
+              <input class="form-control form-control-lg" type="text" name="days-old" value="0" id="baby-days-old">
+            </label>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="crop">Crop</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
 </div>
 
 {% for baby in babies %}
-<div class="baby-wrapper" data-id={{ baby.baby.id }}>
+<div class="baby-wrapper mb-2" data-id={{ baby.baby.id }}>
   <div class="card">
     <div class="card-header">
 
       <form method="POST" action="/update_baby" >
         {{ baby.updateform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
-        <div class="name">
-          {{ baby.updateform.name.label }}
-          {{ baby.updateform.name(
-            id="update-name-" + baby.baby.id|string,
-            value=baby.baby.name
-          ) }}
+        <div class="mt-n3 right">
+          <div class="submit-button">
+            {{ baby.updateform.delete(
+              class="btn btn-danger",
+              id="delete-button-" + baby.baby.id|string
+              ) }}
+            </div>
         </div>
-        <div class="dob">
+        <div class="mt-3 name">
+          {{ baby.updateform.name.label }}
+          {% if baby.baby.name %}
+            {{ baby.updateform.name(
+              class="mt-3 form-control form-control-lg",
+              id="update-name-" + baby.baby.id|string,
+              value=baby.baby.name if baby.baby.name else "Baby" + loop.index|string
+            ) }}
+          {% else %}
+            {{ baby.updateform.name(
+              class="form-control form-control-lg",
+              id="update-name-" + baby.baby.id|string,
+              placeholder="Baby " + loop.index|string
+            ) }}
+          {% endif %}
+        </div>
+        <div class="mt-3 dob">
           {{ baby.updateform.dob.label }}
           {{ baby.updateform.dob(
+            class="pickdate form-control form-control-lg",
             id="update-dob-" + baby.baby.id|string,
             value=baby.baby.dob.strftime('%d-%m-%Y'),
-            class="pickdate",
           ) }}
         </div>
         <div class="id">
           {{ baby.updateform.id(id="update-id-" + baby.baby.id|string) }}
         </div>
-        <div class="submit-button submit-update">
-          {{ baby.updateform.update(id="update-button-" + baby.baby.id|string) }}
-          {{ baby.updateform.delete(id="delete-button-" + baby.baby.id|string) }}
+        <div class="mt-3 submit-button">
+          {{ baby.updateform.update(
+            class="btn btn-primary",
+            id="update-button-" + baby.baby.id|string
+          ) }}
         </div>
       </form>
     </div>
 
     <div class="card-body">
-
       <div class="container">
         <div class="row">
           <div class="col">
-            <p>Click to add your photos</p>
+            <div class="instruction-wrapper display-flex-center mb-3">
+              <p class="instruction">Click to add your photos</p>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -107,37 +136,61 @@
           </div>
         </div>
       </div>
+    </div> <!-- /card body -->
 
-    </div> <!-- card body -->
-  </div> <!-- card -->
+    {% if baby.babypics %}
+    <div class="card-body">
+      <div class="predict-button display-flex-center mb-5">
+       <button type="button" class="btn btn-primary btn-lg" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
+      </div>
+      <div class="predict-result display-flex-center mb-3">
+        <h1 id="prediction-result-{{ baby.baby.id }}">BOY</h1>
+      </div>
+    </div>
+    {% endif %}
+
+  </div> <!-- /card -->
 </div> <!-- baby-wrapper -->
-
-<div class="prediction-wrapper">
-  <div class="predict-button">
-    <button type="button" class="btn btn-primary" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
-  </div>
-  <div class="predict-result">
-    <h1 id="prediction-result-{{ baby.baby.id }}">BOY</h1>
-  </div>
-</div>
-
 {% endfor %}
 
 <!-- NewBabyForm -->
-<form method="POST" action="/dashboard">
-  {{ new.csrf_token }}
-  <fieldset class="name">
-    {{ new.name.label }}
-    {{ new.name(placeholder="Baby's Name") }}
-  </fieldset>
-  <fieldset class="dob">
-    {{ new.dob.label }}
-    {{ new.dob(class="pickdate") }}
-  </fieldset>
-  <div class="submit-button submit-new">
-    {{ new.add }}
+<div class="baby-wrapper mb-2">
+  <div class="card">
+    <div class="card-header">
+      <div class="instruction-wrapper mb-3">
+        <div class="row">
+          <div class="col-12 display-flex-center">
+            <p class="instruction">Add a new baby below</p>
+          </div>
+          <div class="col-12 display-flex-center">
+            <p class="small">If your baby has siblings, adding their images in first increases prediction accuracy.</p>
+          </div>
+        </div>
+      </div>
+      <form method="POST" action="/dashboard">
+        {{ new.csrf_token }}
+        <fieldset class="mt-3 name">
+          {{ new.name.label }}
+          {{ new.name(
+            class="form-control form-control-lg",
+            placeholder="Baby's Name",
+          )}}
+        </fieldset>
+        <fieldset class="mt-3 dob">
+          {{ new.dob.label }}
+          {{ new.dob(
+            class="pickdate form-control form-control-lg",
+          )}}
+        </fieldset>
+        <div class="mt-3 submit-button">
+          {{ new.add(
+            class="btn btn-primary",
+          )}}
+        </div>
+      </form>
+    </div>
   </div>
-</form>
+</div>
 
 <!-- JS unique to Dashboard.html -->
 {% if babies %}

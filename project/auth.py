@@ -68,6 +68,18 @@ def signup():
         body="Sign up for a user account."
     )
 
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('main.index'))
+
+
+
+
+
+
+
 
 # @auth.route('/signin')
 # def signin():
@@ -118,8 +130,3 @@ def signup():
 #     db.session.commit()
 #
 #     return redirect(url_for('auth.signin'))
-
-
-@auth.route('/logout')
-def logout():
-    return 'Logout'
