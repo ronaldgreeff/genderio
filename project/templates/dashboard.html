@@ -16,7 +16,6 @@
         <div class="img-container">
           <img id="hidden_image" src="">
         </div>
-        <!-- <div class="preview" id="file" style="height: 256px; width: 256px;"></div> -->
       </div>
       <div class="modal-baby-age">
         <h6>How old is baby in the picture?</h6>
@@ -38,70 +37,87 @@
 </div>
 
 {% for baby in babies %}
-
 <div class="baby-wrapper" data-id={{ baby.baby.id }}>
-  <form method="POST" action="/update_baby" >
-    {{ baby.updateform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
-    <div class="name">
-      {{ baby.updateform.name.label }}
-      {{ baby.updateform.name(
-        id="update-name-" + baby.baby.id|string,
-        value=baby.baby.name
-      ) }}
-    </div>
-    <div class="dob">
-      {{ baby.updateform.dob.label }}
-      {{ baby.updateform.dob(
-        id="update-dob-" + baby.baby.id|string,
-        value=baby.baby.dob.strftime('%d-%m-%Y'),
-        class="pickdate",
-      ) }}
-    </div>
-    <div class="id">
-      {{ baby.updateform.id(id="update-id-" + baby.baby.id|string) }}
-    </div>
-    <div class="submit-button submit-update">
-      {{ baby.updateform.update(id="update-button-" + baby.baby.id|string) }}
-    </div>
-    <div class="submit-button submit-delete">
-      {{ baby.updateform.delete(id="delete-button-" + baby.baby.id|string) }}
-    </div>
-  </form>
+  <div class="card">
+    <div class="card-header">
 
-  <div class="image-inputs-wrapper" id="image-input-{{ loop.index0 }}">
-    <label class="label" id="upload_input-{{ loop.index0 }}-0" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-0" src={{ baby.babypics.0 if baby.babypics.0 else "static/img/0.png" }} alt="baby {{ loop.index0 }} upload thumbmail 0">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-0" name="image-{{ loop.index0 }}-0" accept="image/*">
-    </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-1" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-1" src={{ baby.babypics.1 if baby.babypics.1 else "static/img/1.png" }} alt="baby {{ loop.index0 }} upload thumbmail 1">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-1" name="image-{{ loop.index0 }}-1" accept="image/*">
-    </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-2" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-2" src={{ baby.babypics.2 if baby.babypics.2 else "static/img/2.png" }} alt="baby {{ loop.index0 }} upload thumbmail 2">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-2" name="image-{{ loop.index0 }}-2" accept="image/*">
-    </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-3" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-3" src={{ baby.babypics.3 if baby.babypics.3 else "static/img/3.png" }} alt="baby {{ loop.index0 }} upload thumbmail 3">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-3" name="image-{{ loop.index0 }}-3" accept="image/*">
-    </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-4" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-4" src={{ baby.babypics.4 if baby.babypics.4 else "static/img/4.png" }} alt="baby {{ loop.index0 }} upload thumbmail 4">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-4" name="image-{{ loop.index0 }}-4" accept="image/*">
-    </label>
-    <label class="label" id="upload_input-{{ loop.index0 }}-5" data-id={{ baby.baby.id }}>
-      <img class="rounded" id="upload_thumbmail-{{ loop.index0 }}-5" src={{ baby.babypics.5 if baby.babypics.5 else "static/img/5.png" }} alt="baby {{ loop.index0 }} upload thumbmail 5">
-      <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-5" name="image-{{ loop.index0 }}-5" accept="image/*">
-    </label>
-  </div>
-</div>
+      <form method="POST" action="/update_baby" >
+        {{ baby.updateform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
+        <div class="name">
+          {{ baby.updateform.name.label }}
+          {{ baby.updateform.name(
+            id="update-name-" + baby.baby.id|string,
+            value=baby.baby.name
+          ) }}
+        </div>
+        <div class="dob">
+          {{ baby.updateform.dob.label }}
+          {{ baby.updateform.dob(
+            id="update-dob-" + baby.baby.id|string,
+            value=baby.baby.dob.strftime('%d-%m-%Y'),
+            class="pickdate",
+          ) }}
+        </div>
+        <div class="id">
+          {{ baby.updateform.id(id="update-id-" + baby.baby.id|string) }}
+        </div>
+        <div class="submit-button submit-update">
+          {{ baby.updateform.update(id="update-button-" + baby.baby.id|string) }}
+          {{ baby.updateform.delete(id="delete-button-" + baby.baby.id|string) }}
+        </div>
+      </form>
+    </div>
+
+    <div class="card-body">
+
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <p>Click to add your photos</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="image-inputs-wrapper" id="image-input-{{ loop.index0 }}">
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-0" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-0" src={{ baby.babypics.0 if baby.babypics.0 else "static/img/0.png" }} alt="baby {{ loop.index0 }} upload thumbmail 0">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-0" name="image-{{ loop.index0 }}-0" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-1" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-1" src={{ baby.babypics.1 if baby.babypics.1 else "static/img/1.png" }} alt="baby {{ loop.index0 }} upload thumbmail 1">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-1" name="image-{{ loop.index0 }}-1" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-2" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-2" src={{ baby.babypics.2 if baby.babypics.2 else "static/img/2.png" }} alt="baby {{ loop.index0 }} upload thumbmail 2">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-2" name="image-{{ loop.index0 }}-2" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-3" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-3" src={{ baby.babypics.3 if baby.babypics.3 else "static/img/3.png" }} alt="baby {{ loop.index0 }} upload thumbmail 3">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-3" name="image-{{ loop.index0 }}-3" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-4" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-4" src={{ baby.babypics.4 if baby.babypics.4 else "static/img/4.png" }} alt="baby {{ loop.index0 }} upload thumbmail 4">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-4" name="image-{{ loop.index0 }}-4" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-5" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-5" src={{ baby.babypics.5 if baby.babypics.5 else "static/img/5.png" }} alt="baby {{ loop.index0 }} upload thumbmail 5">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-5" name="image-{{ loop.index0 }}-5" accept="image/*">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- card body -->
+  </div> <!-- card -->
+</div> <!-- baby-wrapper -->
 
 <div class="prediction-wrapper">
-  <div class="predict-result">
-    <h1 id="prediction-result-{{ baby.baby.id }}">BOY</h1>
-  </div>
   <div class="predict-button">
     <button type="button" class="btn btn-primary" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
+  </div>
+  <div class="predict-result">
+    <h1 id="prediction-result-{{ baby.baby.id }}">BOY</h1>
   </div>
 </div>
 
@@ -127,66 +143,6 @@
 {% if babies %}
 <script src="static/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
-
-  // DELETE
-  /////////////////////////////////
-  // $('.submit-delete').on('click', function(e) {
-  //   e.preventDefault();
-  //   let form = this.parentElement;
-  //   formData = new FormData();
-  //   formData.append('name', form.name.value)
-  //   formData.append('dob', form.dob.value)
-  //   formData.append('id', form.id.value)
-  //
-  //   $.ajax('/update_baby', {
-  //       method: 'POST',
-  //       data: formData,
-  //       processData: false,
-  //       contentType: false,
-  //
-  //       success: function (data) {
-  //         if (data.success != true) {
-  //           console.log(data.error) // todo
-  //         }
-  //       },
-  //
-  //       error: function (xhr, ajaxOptions, thrownError) {
-  //         console.log(xhr.status);
-  //         console.log(thrownError);
-  //       },
-  //     });
-  //
-  // });
-
-  // UPDATE
-  /////////////////////////////////
-  // $('.submit-update').on('click', function(e) {
-  //   e.preventDefault();
-  //   let form = this.parentElement;
-  //   formData = new FormData();
-  //   formData.append('name', form.name.value)
-  //   formData.append('dob', form.dob.value)
-  //   formData.append('id', form.id.value)
-  //
-  //   $.ajax('/update_baby', {
-  //       method: 'POST',
-  //       data: formData,
-  //       processData: false,
-  //       contentType: false,
-  //
-  //       success: function (data) {
-  //         if (data.success != true) {
-  //           console.log(data.error) // todo
-  //         }
-  //       },
-  //
-  //       error: function (xhr, ajaxOptions, thrownError) {
-  //         console.log(xhr.status);
-  //         console.log(thrownError);
-  //       },
-  //     });
-  //
-  // });
 
   // PREDICTION
   /////////////////////////////////
@@ -243,7 +199,8 @@
     if (cropper) {
       let canvas = cropper.getCroppedCanvas();
       let upload_img = document.getElementById(hidden_image.dataset.backref);
-      let baby_id = $(upload_img).parents().eq(2)[0].dataset.id
+
+      let baby_id = $(upload_img).parents()[0].dataset.id;
       let weeks_old = document.getElementById('baby-weeks-old');
       let days_old = document.getElementById('baby-days-old');
 

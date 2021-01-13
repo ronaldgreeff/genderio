@@ -122,7 +122,7 @@ def upload_img():
         else:
             data['error'] = "Parent ID does not match parent ID of baby"
     else:
-        data['error'] = "No baby found with that ID"
+        data['error'] = "No baby found with ID {}".format(baby_id)
 
 
     return jsonify(data)

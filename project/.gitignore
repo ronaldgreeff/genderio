@@ -3,3 +3,4 @@ models/
 media/
 .env
 db.*
+_junk/
