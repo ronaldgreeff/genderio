@@ -39,3 +39,4 @@ class UpdateBabyForm(FlaskForm):
         ]
     )
     update = SubmitField('Update')
+    delete = SubmitField('Delete')

@@ -59,8 +59,8 @@ def dashboard():
 def update_baby():
 
     # data = {'success': False, 'error': None}
-
     if request.method == "POST":
+
         baby_id = request.form.get('id')
         name = request.form.get('name')
         dob = dtdob(request.form.get('dob'))
@@ -68,10 +68,16 @@ def update_baby():
         baby = Baby.query.get(baby_id)
         if baby:
             if baby.parent_id == current_user.id:
-                baby.name = name
-                baby.dob = dob
+                if request.form.get('update'):
 
-                db.session.commit()
+                    baby.name = name
+                    baby.dob = dob
+                    db.session.commit()
+
+                elif request.form.get('delete'):
+
+                    baby.parent_id = 0
+                    db.session.commit()
 
         #         data['success'] = True
         #     else:

@@ -63,6 +63,9 @@
     <div class="submit-button submit-update">
       {{ baby.updateform.update(id="update-button-" + baby.baby.id|string) }}
     </div>
+    <div class="submit-button submit-delete">
+      {{ baby.updateform.delete(id="delete-button-" + baby.baby.id|string) }}
+    </div>
   </form>
 
   <div class="image-inputs-wrapper" id="image-input-{{ loop.index0 }}">
