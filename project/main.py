@@ -1,6 +1,6 @@
 import os
 from .helpers_utils import get_img_filename, save_image, dtdob
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, redirect
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
@@ -50,6 +50,7 @@ def dashboard():
             'babypics': [b.filepath for b in baby.images[:5]],
             'updateform': UpdateBabyForm(id=baby.id)}
         for baby in babies]
+
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
 
 
@@ -57,7 +58,7 @@ def dashboard():
 @login_required
 def update_baby():
 
-    data = {'success': False, 'error': None}
+    # data = {'success': False, 'error': None}
 
     if request.method == "POST":
         baby_id = request.form.get('id')
@@ -72,13 +73,14 @@ def update_baby():
 
                 db.session.commit()
 
-                data['success'] = True
-            else:
-                data['error'] = "Parent ID does not match parent ID of baby"
-        else:
-            data['error'] = "No baby found with that ID"
+        #         data['success'] = True
+        #     else:
+        #         data['error'] = "Parent ID does not match parent ID of baby"
+        # else:
+        #     data['error'] = "No baby found with that ID"
 
-    return jsonify(data)
+    # return jsonify(data)
+    return redirect("dashboard")
 
 
 @main.route("/upload_img", methods=["POST"])
