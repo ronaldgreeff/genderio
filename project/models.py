@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime as dt
 from . import db
 
 
@@ -31,15 +32,30 @@ class User(UserMixin, db.Model):
         db.DateTime,
         index=False,
         unique=False,
-        nullable=True
+        nullable=True,
+        default=dt.now()
+    )
+    confirmed = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False,
+    )
+    confirmed_on = db.Column(
+        db.DateTime,
+        nullable=True,
     )
     last_login = db.Column(
         db.DateTime,
         index=False,
         unique=False,
-        nullable=True
+        nullable=True,
     )
     babies = db.relationship('Baby', backref='parent', lazy=True,)
+
+    # def __init__(self, name, email):
+    #     self.name = name
+    #     self.email = email
+    #     self.created_on = dt.now()
 
     def set_password(self, password):
         """Create hashed password."""

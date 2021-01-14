@@ -2,13 +2,15 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 from flask_login import LoginManager
+from flask_mail import Mail
 
 db = SQLAlchemy()
+mail = Mail()
 
 def create_app():
+
     app = Flask(__name__)#, instance_relative_config=False)
     app.config.from_object(Config)
-
 
     db.init_app(app)
     login_manager = LoginManager()
@@ -20,6 +22,9 @@ def create_app():
     def load_user(user_id):
         user = User.query.get(int(user_id))
         return user
+
+
+    mail.init_app(app)
 
 
     from .auth import auth as auth_blueprint

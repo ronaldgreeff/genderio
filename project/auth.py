@@ -4,9 +4,14 @@ from flask import (Blueprint, render_template, redirect, url_for, request,
 from flask_login import login_required, logout_user, current_user, login_user
 from .models import User
 from . import db
+from .emails import send_email
 from .auth_forms import SigninForm, SignupForm
+from .auth_token import generate_confirmation_token, confirm_token
+from datetime import datetime as dt
+
 
 auth = Blueprint('auth', __name__)
+
 
 @auth.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -30,6 +35,7 @@ def signin():
             return redirect(next_page or url_for('main.dashboard', user_id= user.id))
         flash('Invalid username/password combination')
         return redirect(url_for('auth.signin'))
+
     return render_template(
         'signin.jinja2',
         form=form,
@@ -57,9 +63,19 @@ def signup():
             user.set_password(form.password.data)
             db.session.add(user)
             db.session.commit()  # Create new user
-            login_user(user)  # Log in as newly created user
+
+            token = generate_confirmation_token(user.email)
+            confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+            html = render_template('email_confirm.html', confirm_url=confirm_url)
+            subject = "Please confirm your email"
+            send_email(user.email, subject, html)
+
+            flash('A confirmation has been sent via email.', 'success')
+
             return redirect(url_for('main.dashboard'))
+
         flash('A user already exists with that email address.')
+
     return render_template(
         'signup.jinja2',
         title='Create an Account.',
@@ -67,6 +83,29 @@ def signup():
         template='signup-page',
         body="Sign up for a user account."
     )
+
+@auth.route('/confirm/<token>')
+# @login_required
+def confirm_email(token):
+    try:
+        email = confirm_token(token)
+    except:
+        print('The confirmation link in invalid or has expired.')
+        flash('The confirmation link in invalid or has expired.', 'danger')
+    user = User.query.filter_by(email=email).first_or_404()
+    if user.confirmed:
+        print('Account already confirmed. Please Login.')
+        flash('Account already confirmed. Please Login.', 'success')
+    else:
+        user.confirmed = True
+        user.confirmed_on = dt.now()
+        db.session.add(user)
+        db.session.commit()
+        print('You have confirmed your account. Thanks!')
+        flash('You have confirmed your account. Thanks!', 'success')
+        login_user(user)  # Log in as newly created user
+    return redirect(url_for('main.dashboard'))
+
 
 @auth.route('/logout')
 @login_required
