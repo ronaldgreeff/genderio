@@ -1,6 +1,6 @@
 import os
 from .helpers_utils import get_img_filename, save_image, dtdob
-from flask import Flask, request, send_from_directory, redirect
+from flask import Flask, request, send_from_directory, redirect, url_for
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
@@ -33,6 +33,10 @@ def dashboard():
     GET serves a list of existing babies for user + new baby form
     POST validates new baby form
     """
+
+    if not current_user.confirmed:
+        return redirect(url_for('auth.unconfirmed'))
+
     if request.method == "POST":
         dob = dtdob(request.form.get('dob'))
         baby = Baby(

@@ -44,6 +44,12 @@ def signin():
         body="Log in with your User account."
     )
 
+@auth.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    return render_template('unconfirmed.html')
+
+
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     """
@@ -73,6 +79,7 @@ def signup():
             flash('A confirmation has been sent via email.', 'success')
 
             return redirect(url_for('main.dashboard'))
+            # return redirect(url_for('auth.unconfirmed'))
 
         flash('A user already exists with that email address.')
 
