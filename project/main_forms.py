@@ -40,3 +40,8 @@ class UpdateBabyForm(FlaskForm):
     )
     update = SubmitField('Update')
     delete = SubmitField('Delete')
+
+class ConfirmationForm(FlaskForm):
+    id = HiddenField('')
+    right = SubmitField('Right')
+    wrong = SubmitField('Wrong')

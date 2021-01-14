@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from . import db
 from .models import User, Baby, BabyImg
-from .main_forms import NewBabyForm, UpdateBabyForm
+from .main_forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 
 
 main = Blueprint('main', __name__)
@@ -48,7 +48,9 @@ def dashboard():
     babies = [{
             'baby': baby,
             'babypics': [b.filepath for b in baby.images[:5]],
-            'updateform': UpdateBabyForm(id=baby.id)}
+            'updateform': UpdateBabyForm(id=baby.id),
+            'confirmform': ConfirmationForm(id=baby.id),
+            }
         for baby in babies]
 
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
@@ -58,7 +60,6 @@ def dashboard():
 @login_required
 def update_baby():
 
-    # data = {'success': False, 'error': None}
     if request.method == "POST":
 
         baby_id = request.form.get('id')
@@ -79,15 +80,28 @@ def update_baby():
                     baby.parent_id = 0
                     db.session.commit()
 
-        #         data['success'] = True
-        #     else:
-        #         data['error'] = "Parent ID does not match parent ID of baby"
-        # else:
-        #     data['error'] = "No baby found with that ID"
-
-    # return jsonify(data)
     return redirect("dashboard")
 
+@main.route("/confirm_gender", methods=["POST"])
+@login_required
+def confirm_gender():
+
+    if request.method == "POST":
+        baby_id = request.form.get('id')
+
+        baby = Baby.query.get(baby_id)
+        if baby:
+            if baby.parent_id == current_user.id:
+                if request.form.get('right'):
+                    baby.gender = baby.predicted_gender
+                    db.session.commit()
+
+                elif request.form.get('wrong'):
+                    reverse = {'m': 'f', 'f': 'm'}
+                    baby.gender = reverse[baby.predicted_gender]
+                    db.session.commit()
+
+    return redirect("dashboard")
 
 @main.route("/upload_img", methods=["POST"])
 @login_required
@@ -116,7 +130,6 @@ def upload_img():
             db.session.add(baby_img)
             db.session.commit()
 
-            # filepath = save_image(image, image_type, filename)
             data['success'] = True
             data['src'] = partial_filepath
         else:

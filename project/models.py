@@ -83,7 +83,7 @@ class Baby(db.Model):
     )
     predicted_gender = db.Column(
         db.String(1),
-        nullable=True,
+        nullable=False,
         unique=False,
         default='u',
     )
