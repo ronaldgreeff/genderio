@@ -33,7 +33,6 @@ class User(UserMixin, db.Model):
         index=False,
         unique=False,
         nullable=True,
-        default=dt.now()
     )
     confirmed = db.Column(
         db.Boolean,
