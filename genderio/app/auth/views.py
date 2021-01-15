@@ -45,7 +45,7 @@ def signup():
         flash('A user already exists with that email address.')
 
     return render_template(
-        'signup.jinja2',
+        'signup.html',
         title='Create an Account.',
         form=form,
         template='signup-page',
@@ -83,7 +83,7 @@ def signin():
         return redirect(url_for('auth.signin'))
 
     return render_template(
-        'signin.jinja2',
+        'signin.html',
         form=form,
         title='Log in.',
         template='login-page',
