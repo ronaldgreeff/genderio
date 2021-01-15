@@ -1,0 +1,121 @@
+body {
+	/* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */
+  background: linear-gradient(-45deg, #77c3ec, #89cff0, #f4c2c2, #f699cd);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+display-flex, .display-flex, .display-flex-center, .signup-content, .signin-content, .social-login, .socials {
+  display: flex;
+  display: -webkit-flex; }
+.display-flex {
+  justify-content: space-between;
+  -moz-justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -o-justify-content: space-between;
+  -ms-justify-content: space-between;
+  align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center; }
+
+.display-flex-center {
+  justify-content: center;
+  -moz-justify-content: center;
+  -webkit-justify-content: center;
+  -o-justify-content: center;
+  -ms-justify-content: center;
+  align-items: center;
+  -moz-align-items: center;
+  -webkit-align-items: center;
+  -o-align-items: center;
+  -ms-align-items: center; }
+
+.position-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); }
+
+/* CROPPERJS */
+/* Ensure the size of the image fit the container perfectly */
+img {
+  display: block;
+  /* This rule is very important, please don't ignore this */
+  max-width: 100%;
+}
+/* CROPPERJS */
+.container {
+   max-width: 960px;
+   margin: 20px auto;
+ }
+
+ img {
+   max-width: 100%;
+ }
+
+ .row,
+ .preview {
+   overflow: hidden;
+ }
+
+ .col {
+   float: left;
+ }
+
+ .col-6 {
+   width: 50%;
+ }
+
+ .col-3 {
+   width: 25%;
+ }
+
+.label {
+  cursor: pointer;
+}
+
+.progress {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.alert {
+  display: none;
+}
+
+.img-container img {
+  max-width: 100%;
+}
+
+/* DASHBOARD */
+.baby-image {
+  width: 145px;
+  max-height: 145px;
+}
+.baby-wrapper {
+  margin: 1%;
+}
+
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}

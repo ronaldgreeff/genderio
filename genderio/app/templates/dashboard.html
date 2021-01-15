@@ -1,0 +1,368 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- MODAL -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Crop the image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="instruction-wrapper display-flex-center mb-3">
+          <p class="instruction">Crop the image so that only baby is in the square</p>
+        </div>
+        <div class="img-container">
+          <img id="hidden_image" src="">
+        </div>
+      </div>
+      <div class="modal-baby-age">
+        <h6 class="text-center">How old is baby in the picture?</h6>
+        <div class="row">
+          <div class="col">
+            <label for="weeks-old">
+              <p>Weeks</p>
+              <input class="form-control form-control-lg" type="text" name="weeks-old" value="0" id="baby-weeks-old">
+            </label>
+          </div>
+          <div class="col">
+            <label for="days-old">
+              <p>Days</p>
+              <input class="form-control form-control-lg" type="text" name="days-old" value="0" id="baby-days-old">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="crop">Crop</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% for baby in babies %}
+<div class="baby-wrapper mb-2" data-id={{ baby.baby.id }}>
+  <div class="card">
+    <div class="card-header">
+
+      <form method="POST" action="/update_baby" >
+        {{ baby.updateform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
+        <div class="mt-n3 right">
+          <div class="submit-button">
+            {{ baby.updateform.delete(
+              class="btn btn-danger",
+              id="delete-button-" + baby.baby.id|string
+              ) }}
+            </div>
+        </div>
+        <div class="mt-3 name">
+          {{ baby.updateform.name.label }}
+          {% if baby.baby.name %}
+            {{ baby.updateform.name(
+              class="mt-3 form-control form-control-lg",
+              id="update-name-" + baby.baby.id|string,
+              value=baby.baby.name if baby.baby.name else "Baby" + loop.index|string
+            ) }}
+          {% else %}
+            {{ baby.updateform.name(
+              class="form-control form-control-lg",
+              id="update-name-" + baby.baby.id|string,
+              placeholder="Baby " + loop.index|string
+            ) }}
+          {% endif %}
+        </div>
+        <div class="mt-3 dob">
+          {{ baby.updateform.dob.label }}
+          {{ baby.updateform.dob(
+            class="pickdate form-control form-control-lg",
+            id="update-dob-" + baby.baby.id|string,
+            value=baby.baby.dob.strftime('%d-%m-%Y'),
+          ) }}
+        </div>
+        <div class="id">
+          {{ baby.updateform.id(id="update-id-" + baby.baby.id|string) }}
+        </div>
+        <div class="mt-3 submit-button">
+          {{ baby.updateform.update(
+            class="btn btn-primary",
+            id="update-button-" + baby.baby.id|string
+          ) }}
+        </div>
+      </form>
+    </div>
+
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <div class="instruction-wrapper display-flex-center mb-3">
+              <p class="instruction">Click to add your photos</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="image-inputs-wrapper" id="image-input-{{ loop.index0 }}">
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-0" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-0" src={{ baby.babypics.0 if baby.babypics.0 else "static/img/0.png" }} alt="baby {{ loop.index0 }} upload thumbmail 0">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-0" name="image-{{ loop.index0 }}-0" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-1" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-1" src={{ baby.babypics.1 if baby.babypics.1 else "static/img/1.png" }} alt="baby {{ loop.index0 }} upload thumbmail 1">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-1" name="image-{{ loop.index0 }}-1" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-2" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-2" src={{ baby.babypics.2 if baby.babypics.2 else "static/img/2.png" }} alt="baby {{ loop.index0 }} upload thumbmail 2">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-2" name="image-{{ loop.index0 }}-2" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-3" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-3" src={{ baby.babypics.3 if baby.babypics.3 else "static/img/3.png" }} alt="baby {{ loop.index0 }} upload thumbmail 3">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-3" name="image-{{ loop.index0 }}-3" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-4" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-4" src={{ baby.babypics.4 if baby.babypics.4 else "static/img/4.png" }} alt="baby {{ loop.index0 }} upload thumbmail 4">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-4" name="image-{{ loop.index0 }}-4" accept="image/*">
+              </label>
+              <label class="label baby-label" id="upload_input-{{ loop.index0 }}-5" data-id={{ baby.baby.id }}>
+                <img class="baby-image" id="upload_thumbmail-{{ loop.index0 }}-5" src={{ baby.babypics.5 if baby.babypics.5 else "static/img/5.png" }} alt="baby {{ loop.index0 }} upload thumbmail 5">
+                <input type="file" class="form-control-file sr-only" id="input-{{ loop.index0 }}-5" name="image-{{ loop.index0 }}-5" accept="image/*">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- /card body -->
+
+    {% if baby.babypics %}
+    <div class="card-body">
+      <div class="predict-result mb-3">
+
+        {% if baby.baby.gender != 'u' %}
+          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">{{ baby.baby.gender }}</h1>
+        {% elif baby.baby.predicted_gender != 'u' %}
+          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">{{ baby.baby.predicted_gender }}</h1>
+
+          <form class="display-flex-center" method="POST" action="/confirm_gender" >
+            {{ baby.confirmform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
+            <div class="id">
+              {{ baby.confirmform.id(id="confirm-gender-" + baby.baby.id|string) }}
+            </div>
+            <div class="mt-3">
+              <!-- {{ baby.confirmform.right.label }} -->
+              {{ baby.confirmform.right(
+                class="",
+                id="confirm-right-" + baby.baby.id|string,
+              ) }}
+            </div>
+            <div class="mt-3">
+              <!-- {{ baby.confirmform.wrong.label }} -->
+              {{ baby.confirmform.wrong(
+                class="",
+                id="confirm-wrong-" + baby.baby.id|string,
+              ) }}
+            </div>
+          </form>
+
+        {% else %}
+          <div class="predict-button display-flex-center mb-5">
+            <button type="button" class="btn btn-primary btn-lg" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+    {% endif %}
+
+  </div> <!-- /card -->
+</div> <!-- baby-wrapper -->
+{% endfor %}
+
+<!-- NewBabyForm -->
+<div class="baby-wrapper mb-2">
+  <div class="card">
+    <div class="card-header">
+      <div class="instruction-wrapper mb-3">
+        <div class="row">
+          <div class="col-12 display-flex-center">
+            <p class="instruction">Add a new baby below</p>
+          </div>
+          <div class="col-12 display-flex-center">
+            <p class="small">If your baby has siblings, adding their images in first increases prediction accuracy.</p>
+          </div>
+        </div>
+      </div>
+      <form method="POST" action="/dashboard">
+        {{ new.csrf_token }}
+        <fieldset class="mt-3 name">
+          {{ new.name.label }}
+          {{ new.name(
+            class="form-control form-control-lg",
+            placeholder="Baby's Name",
+          )}}
+        </fieldset>
+        <fieldset class="mt-3 dob">
+          {{ new.dob.label }}
+          {{ new.dob(
+            class="pickdate form-control form-control-lg",
+          )}}
+        </fieldset>
+        <div class="mt-3 submit-button">
+          {{ new.add(
+            class="btn btn-primary",
+          )}}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JS unique to Dashboard.html -->
+{% if babies %}
+<script src="static/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+
+  // PREDICTION
+  /////////////////////////////////
+
+  $('.predict-button').children().on('click', function() {
+    let formData = new FormData();
+    formData.append("id", this.dataset.id);
+    $.ajax('/predict', {
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+
+      success: function(data) {
+        console.log(data)
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(xhr.status);
+        console.log(thrownError);
+      },
+    })
+  });
+
+  // IMAGE UPLOAD
+  /////////////////////////////////
+
+  const $modal = $('#modal');
+  const hidden_image = document.getElementById('hidden_image');
+  // on modal shown/hidden create/destroy cropper
+  $modal.on('shown.bs.modal', function () {
+    cropper = new Cropper(hidden_image, {
+      viewMode: 2,
+      dragMode: 'move',
+      initialAspectRatio: 16 / 9,
+      preview: '.preview',
+      scalable: false,
+      zoomable: false,
+      zoomOnTouch: false,
+      center: false,
+      guides: false,
+    });
+  }).on('hidden.bs.modal', function () {
+    cropper.destroy();
+    cropper = null;
+  });
+
+  // on crop
+  $('#modal #crop').on('click', function() {
+    var initialImage;
+    var canvas;
+
+    $modal.modal('hide');
+
+    if (cropper) {
+      let canvas = cropper.getCroppedCanvas();
+      let upload_img = document.getElementById(hidden_image.dataset.backref);
+
+      let baby_id = $(upload_img).parents()[0].dataset.id;
+      let weeks_old = document.getElementById('baby-weeks-old');
+      let days_old = document.getElementById('baby-days-old');
+
+      initialImage = upload_img.src;
+      // upload_img.src = canvas.toDataURL();
+
+      canvas.toBlob(function(blob) {
+
+        let formData = new FormData();
+        formData.append('imageType', blob.type);
+        formData.append("image", blob);
+        formData.append("baby_id", baby_id);
+        formData.append("weeks", weeks_old);
+        formData.append("days", days_old);
+
+        $.ajax('/upload_img', {
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function (data) {
+              console.log(data)
+              if (data.success == true) {
+                upload_img.src = data.src;
+                window.location.href = "{{ url_for('main.dashboard') }}"
+              }
+              else {
+                console.log(data.error) // todo
+              }
+            },
+
+            error: function (xhr, ajaxOptions, thrownError) {
+              upload_img.src = initialImage;
+              console.log(xhr.status);
+              console.log(thrownError);
+            },
+          });
+
+      });
+    };
+  });
+
+  $('.image-inputs-wrapper').children().click(function(){
+    let baby_id = this.dataset.id;
+    let upload_img = this.firstElementChild;
+    let input = upload_img.nextElementSibling;
+    let cropper;
+
+    // upon image upload, read it and send to hidden_image.src, then show modal
+    input.addEventListener('change', function(e) {
+      var files = e.target.files;
+      var done = function(url) {
+        input.value = '';
+        hidden_image.src = url;
+        hidden_image.setAttribute("data-backref", upload_img.id);
+        $modal.modal('show');
+      };
+      var reader;
+      var file;
+      var url;
+
+      if (files && files.length > 0) {
+        file = files[0]
+
+        if (URL) {
+          done(URL.createObjectURL(file));
+        } else if (FileReader) {
+          reader = new FileReader();
+          reader.onload = function(e) {
+            done(reader.result);
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+
+  });
+
+</script>
+{% endif %}
+
+{% endblock %}
