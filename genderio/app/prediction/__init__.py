@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-predictions = Blueprint('predictions', __name__)
+prediction = Blueprint('prediction', __name__)
 
 from . import views

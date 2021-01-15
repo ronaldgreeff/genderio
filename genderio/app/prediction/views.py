@@ -10,15 +10,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from .. import db
 from ..models import User, Baby, BabyImg
-from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 
-
-main = Blueprint('main', __name__)
+from . import prediction
 
 # keras disabled for now
 # from .helpers_keras import fetch_model
 # model = fetch_model()
-
 
 def predict_gender(baby):
     d = {'male': [], 'female': []}
@@ -35,7 +32,7 @@ def predict_gender(baby):
     # if unequal get most and average else get average and highest
     return d
 
-@main.route("/predict", methods=["POST"])
+@prediction.route("/predict", methods=["POST"])
 @login_required
 def predict():
     data = {'success': False, 'error': None}
@@ -51,9 +48,3 @@ def predict():
             data['gender'] = gender
 
     return data
-
-# todo: should serve static files with nginx
-@main.route("/media/<filename>", methods=["GET"])
-@login_required
-def send_media(filename):
-    return send_from_directory('media', filename)

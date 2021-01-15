@@ -96,7 +96,7 @@
       </form>
     </div>
 
-    <div class="card-body">
+    <div class="card-body" id="images-for-{{ baby.baby.id }}">
       <div class="container">
         <div class="row">
           <div class="col">
@@ -308,10 +308,11 @@
               console.log(data)
               if (data.success == true) {
                 upload_img.src = data.src;
-                window.location.href = "{{ url_for('main.dashboard') }}"
+                window.location.href = "{{ url_for('main.dashboard') }}";
+                // TODO document.getElementById("images-for-" + baby_id).scrollIntoView();
               }
               else {
-                console.log(data.error) // todo
+                console.log(data.error) // todo: show errors / form validation
               }
             },
 

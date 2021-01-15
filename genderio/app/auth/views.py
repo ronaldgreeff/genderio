@@ -11,6 +11,9 @@ from datetime import datetime as dt
 from . import auth
 # auth = Blueprint('auth', __name__)
 
+
+# TODO: forgot password
+
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     """

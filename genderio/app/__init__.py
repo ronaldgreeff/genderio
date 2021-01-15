@@ -30,6 +30,9 @@ def create_app():
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
+    from .prediction import prediction as prediction_blueprint
+    app.register_blueprint(prediction_blueprint)
+
     from .models import User
     @login_manager.user_loader
     def load_user(user_id):
