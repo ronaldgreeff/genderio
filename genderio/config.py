@@ -15,6 +15,7 @@ class Config:
     STATIC_FOLDER = 'static'
     TEMPLATES_FOLDER = 'templates'
     UPLOAD_FOLDER = 'media'
+    ORIGINALS_FOLDER = 'originals'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')

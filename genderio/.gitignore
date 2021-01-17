@@ -1,6 +1,7 @@
 __pycache__/
 models/
 media/
+originals/
 .env
 db.*
 _junk/
