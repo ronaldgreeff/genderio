@@ -59,25 +59,24 @@ def dashboard():
 @login_required
 def update_baby():
 
-    if request.method == "POST":
+    # if request.method == "POST":
+    baby_id = request.form.get('id')
+    name = request.form.get('name')
+    dob = dtdob(request.form.get('dob'))
 
-        baby_id = request.form.get('id')
-        name = request.form.get('name')
-        dob = dtdob(request.form.get('dob'))
+    baby = Baby.query.get(baby_id)
+    if baby:
+        if baby.parent_id == current_user.id:
+            if request.form.get('update'):
 
-        baby = Baby.query.get(baby_id)
-        if baby:
-            if baby.parent_id == current_user.id:
-                if request.form.get('update'):
+                baby.name = name
+                baby.dob = dob
+                db.session.commit()
 
-                    baby.name = name
-                    baby.dob = dob
-                    db.session.commit()
+            elif request.form.get('delete'):
 
-                elif request.form.get('delete'):
-
-                    baby.parent_id = 0
-                    db.session.commit()
+                baby.parent_id = 0
+                db.session.commit()
 
     return redirect("dashboard")
 

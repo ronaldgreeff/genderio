@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, current_app
 from flask_mail import Message, Mail
 from config import Config
 from . import mail

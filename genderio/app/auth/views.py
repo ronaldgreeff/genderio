@@ -6,7 +6,7 @@ from ..models import User
 from .. import db
 from ..email import send_email
 from .forms import SigninForm, SignupForm
-from .tokens import generate_confirmation_token, confirm_token
+from .tokens import generate_confirmation_token, confirm_confirmation_token
 from datetime import datetime as dt
 from . import auth
 # auth = Blueprint('auth', __name__)
@@ -98,7 +98,7 @@ def signin():
 # @login_required
 def confirm_email(token):
     try:
-        email = confirm_token(token)
+        email = confirm_confirmation_token(token)
     except:
         print('The confirmation link in invalid or has expired.')
         flash('The confirmation link in invalid or has expired.', 'danger')

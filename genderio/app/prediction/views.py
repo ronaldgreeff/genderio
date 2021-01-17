@@ -19,6 +19,7 @@ from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
 
 from . import prediction
+from .tokens import generate_outcome_token, deserialize_outcome_token
 
 # keras disabled for now
 # from .helpers_keras import fetch_model
@@ -29,7 +30,13 @@ model.load_weights(os.path.join(os.getcwd(), 'app/prediction/models/tl2_final.h5
 
 def predict_gender(baby):
     d = {'male': [], 'female': []}
-    baby_image_filepaths = db.session.query(BabyImg.filepath).filter(BabyImg.baby_id==baby.id).all()
+
+    baby_image_filepaths = db.session.query(
+        BabyImg.filepath
+    ).filter(
+        BabyImg.baby_id==baby.id
+    ).all()
+
     for baby_image in baby_image_filepaths:
         print(baby_image)
 
@@ -68,6 +75,7 @@ def predict_gender(baby):
     # if unequal get most and average else get average and highest
     return d
 
+
 @prediction.route("/predict", methods=["POST"])
 @login_required
 def predict():
@@ -84,3 +92,38 @@ def predict():
             data['gender'] = gender
 
     return data
+
+
+@prediction.route("/outcome")
+def outcome():
+    oc = request.args.get('oc')
+    token = request.args.get('token')
+
+    if oc != None and token:
+        data = deserialize_outcome_token(token)
+
+        if data:
+            parent_email = data.get('parent_email')
+            baby_id = data.get('baby_id')
+
+            baby = db.session.query(
+                Baby
+            ).join(
+                User
+            ).filter(
+                Baby.id==baby_id,
+                User.email==parent_email,
+            ).first_or_404()
+
+            if oc == True:
+                baby.gender == baby.predicted_gender
+
+            else:
+                reverse = {'m': 'f', 'f': 'm'}
+                baby.gender == reverse[baby.predicted_gender]
+
+            db.session.commit()
+            # todo
+            return "Thanks!"
+
+    return "Invalid"
