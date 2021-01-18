@@ -3,7 +3,7 @@ from flask import Flask, current_app
 from config import Config
 
 app = Flask(__name__)
-# app.config.from_object(Config)
+app.config.from_object(Config)
 # app = current_app._get_current_object()
 serializer = URLSafeSerializer(app.config['SECRET_KEY'])
 

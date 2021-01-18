@@ -32,17 +32,6 @@ def dashboard():
     if not current_user.confirmed:
         return redirect(url_for('auth.unconfirmed'))
 
-    if request.method == "POST":
-        dob = dtdob(request.form.get('dob'))
-        baby = Baby(
-            name=request.form.get('name'),
-            dob=dob,
-            gender=request.form.get('gender'),
-            parent_id=current_user.id,
-        )
-        db.session.add(baby)
-        db.session.commit()
-
     babies = db.session.query(Baby).filter(Baby.parent_id==current_user.id).all()
     babies = [{
             'baby': baby,
@@ -53,6 +42,22 @@ def dashboard():
         for baby in babies]
 
     return render_template("dashboard.html", babies=babies, new=NewBabyForm())
+
+
+@main.route("/make_baby", methods=["POST"])
+@login_required
+def make_baby():
+    dob = dtdob(request.form.get('dob'))
+    baby = Baby(
+        name=request.form.get('name'),
+        dob=dob,
+        gender=request.form.get('gender'),
+        parent_id=current_user.id,
+    )
+    db.session.add(baby)
+    db.session.commit()
+
+    return redirect("dashboard")
 
 
 @main.route("/update_baby", methods=["POST"])

@@ -6,10 +6,9 @@ from ..models import User
 from .. import db
 from ..email import send_email
 from .forms import SigninForm, SignupForm
-from .tokens import generate_confirmation_token, confirm_confirmation_token
+from .tokens import generate_confirmation_token, confirm_email_token
 from datetime import datetime as dt
 from . import auth
-# auth = Blueprint('auth', __name__)
 
 
 # TODO: forgot password
@@ -29,12 +28,14 @@ def signup():
             user = User(
                 name=form.name.data,
                 email=form.email.data,
+                created_on=dt.now(),
             )
             user.set_password(form.password.data)
             db.session.add(user)
             db.session.commit()  # Create new user
 
             token = generate_confirmation_token(user.email)
+
             confirm_url = url_for('auth.confirm_email', token=token, _external=True)
             html = render_template('email_confirm.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
@@ -43,7 +44,6 @@ def signup():
             flash('A confirmation has been sent via email.', 'success')
 
             return redirect(url_for('main.dashboard'))
-            # return redirect(url_for('auth.unconfirmed'))
 
         flash('A user already exists with that email address.')
 
@@ -75,7 +75,7 @@ def signin():
         return redirect(url_for('main.index'))
 
     form = SigninForm()
-    # Validate login attempt
+
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(password=form.password.data):
@@ -97,23 +97,24 @@ def signin():
 @auth.route('/confirm/<token>')
 # @login_required
 def confirm_email(token):
+
     try:
-        email = confirm_confirmation_token(token)
+        email = confirm_email_token(token)
     except:
-        print('The confirmation link in invalid or has expired.')
         flash('The confirmation link in invalid or has expired.', 'danger')
+
     user = User.query.filter_by(email=email).first_or_404()
+
     if user.confirmed:
-        print('Account already confirmed. Please Login.')
         flash('Account already confirmed. Please Login.', 'success')
     else:
         user.confirmed = True
         user.confirmed_on = dt.now()
         db.session.add(user)
         db.session.commit()
-        print('You have confirmed your account. Thanks!')
-        flash('You have confirmed your account. Thanks!', 'success')
-        login_user(user)  # Log in as newly created user
+
+        login_user(user)
+
     return redirect(url_for('main.dashboard'))
 
 

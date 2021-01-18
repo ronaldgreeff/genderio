@@ -102,6 +102,12 @@ class Baby(db.Model):
         unique=False,
         default='u',
     )
+    last_outcome_email = db.Column(
+        db.Date,
+        index=False,
+        nullable=True,
+        unique=False,
+    )
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'),)
     images = db.relationship('BabyImg', backref='baby', lazy=True,)
 

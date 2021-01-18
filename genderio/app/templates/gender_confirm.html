@@ -1,0 +1,10 @@
+<p>Dear {{ data.user_name }}</p>
+{% if data.baby_name %}
+  <p>Were we able to guess the correct gender of {{ data.baby_name }}?<p>
+{% else %}
+  <p>Were we able to guess the correct gender of baby born {{ data.dob }}?<p>
+{% endif %}
+<div class="">
+  <a type="button" name="button" href="{{ confirm_url }}?oc=True">You were right!</a>
+  <a type="button" name="button" href="{{ confirm_url }}?oc=False">You got it wrong =(</a>
+</div>

@@ -94,13 +94,17 @@ def predict():
     return data
 
 
-@prediction.route("/outcome")
-def outcome():
+@prediction.route("/outcome/<token>")
+def confirm_outcome(token):
+
     oc = request.args.get('oc')
-    token = request.args.get('token')
+    print(oc, token)
+    # token = request.args.get('token')
 
     if oc != None and token:
         data = deserialize_outcome_token(token)
+        print(data)
+        you're here
 
         if data:
             parent_email = data.get('parent_email')
@@ -126,4 +130,4 @@ def outcome():
             # todo
             return "Thanks!"
 
-    return "Invalid"
+    return 'error'
