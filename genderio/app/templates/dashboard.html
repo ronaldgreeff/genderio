@@ -51,7 +51,7 @@
     <div class="card-header">
 
       <form method="POST" action="/update_baby" >
-        {{ baby.updateform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
+        {{ baby.updateform.csrf_token(id="update_csrf_token" + baby.baby.id|string) }}
         <div class="mt-n3 right">
           <div class="submit-button">
             {{ baby.updateform.delete(
@@ -143,12 +143,24 @@
       <div class="predict-result mb-3">
 
         {% if baby.baby.gender != 'u' %}
-          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">{{ baby.baby.gender }}</h1>
+          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">
+            {% if baby.baby.gender == 'f' %}
+              GIRL
+            {% else %}
+              BOY
+            {% endif %}
+          </h1>
         {% elif baby.baby.predicted_gender != 'u' %}
-          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">{{ baby.baby.predicted_gender }}</h1>
+          <h1 class="display-flex-center" id="prediction-result-{{ baby.baby.id }}">
+            {% if baby.baby.predicted_gender == 'f' %}
+              GIRL
+            {% else %}
+              BOY
+            {% endif %}
+          </h1>
 
           <form class="display-flex-center" method="POST" action="/confirm_gender" >
-            {{ baby.confirmform.csrf_token(id="csrf_token" + baby.baby.id|string) }}
+            {{ baby.confirmform.csrf_token(id="confirm_csrf_token" + baby.baby.id|string) }}
             <div class="id">
               {{ baby.confirmform.id(id="confirm-gender-" + baby.baby.id|string) }}
             </div>
@@ -169,9 +181,12 @@
           </form>
 
         {% else %}
-          <div class="predict-button display-flex-center mb-5">
+          <!-- <div class="predict-button display-flex-center mb-5">
             <button type="button" class="btn btn-primary btn-lg" name="button" id="predict-button-{{ baby.baby.id }}" data-id={{ baby.baby.id }}>Predict</button>
-          </div>
+          </div> -->
+          <form class="predict-button display-flex-center mb-5" action="/predict" method="POST">
+            <button type="submit" class="btn btn-primary btn-lg" name="button" id="predict-button-{{ baby.baby.id }}" value={{ baby.baby.id }}>Predict</button>
+          </form>
         {% endif %}
 
       </div>
@@ -226,27 +241,28 @@
 <script src="static/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
-  // PREDICTION
-  /////////////////////////////////
-
-  $('.predict-button').children().on('click', function() {
-    let formData = new FormData();
-    formData.append("id", this.dataset.id);
-    $.ajax('/predict', {
-      method: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-
-      success: function(data) {
-        console.log(data)
-      },
-      error: function (xhr, ajaxOptions, thrownError) {
-        console.log(xhr.status);
-        console.log(thrownError);
-      },
-    })
-  });
+  // // PREDICTION
+  // /////////////////////////////////
+  //
+  // $('.predict-button').children().on('click', function() {
+  //   let formData = new FormData();
+  //   formData.append("id", this.dataset.id);
+  //   $.ajax('/predict', {
+  //     method: 'POST',
+  //     data: formData,
+  //     processData: false,
+  //     contentType: false,
+  //
+  //     success: function(data) {
+  //       location.reload()
+  //     },
+  //     error: function (xhr, ajaxOptions, thrownError) {
+  //       console.log('error')
+  //       console.log(xhr.status);
+  //       console.log(thrownError);
+  //     },
+  //   })
+  // });
 
   // IMAGE UPLOAD
   /////////////////////////////////

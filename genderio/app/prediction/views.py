@@ -1,6 +1,6 @@
 import os
 import pathlib
-
+import numpy as np
 from ..helpers.utils import get_img_filename, save_image, dtdob
 from flask import Flask, request, send_from_directory, redirect, url_for
 from flask import jsonify
@@ -29,7 +29,8 @@ model = load_model(os.path.join(os.getcwd(), 'app/prediction/models/tl2_final'))
 model.load_weights(os.path.join(os.getcwd(), 'app/prediction/models/tl2_final.h5'))
 
 def predict_gender(baby):
-    d = {'male': [], 'female': []}
+
+    gender_classes = {0: 'm', 1: 'f'}
 
     baby_image_filepaths = db.session.query(
         BabyImg.filepath
@@ -37,23 +38,12 @@ def predict_gender(baby):
         BabyImg.baby_id==baby.id
     ).all()
 
+    predictions = {0:0, 1:0}
+
     for baby_image in baby_image_filepaths:
-        print(baby_image)
-
-    # preds = model.predict(baby_image)
-    # print("preds", preds)
-
-    # image_paths = [
-    #     'boy/286242_5d3ca9f6-8d8a-408c-bade-01a6efddca6d.jpg',
-    #     'girl/391126_29455299-9e94-4e02-bd1d-c34e391e9546.jpg'
-    # ]
-    #
-    # preds = []
-
-    # for image_path in image_paths:
-
+        baby_image_path = os.path.join(os.getcwd(), 'app', baby_image[0])
         image = keras.preprocessing.image.load_img(
-            '../{}'.format(baby_image[0]),
+            baby_image_path,
             color_mode="grayscale",
             target_size=(128, 128),
         )
@@ -61,37 +51,30 @@ def predict_gender(baby):
         input_array = np.array([input_array])
         pred = model.predict(input_array)
 
-        cl = np.round(pred)
-        pr = pred[:,0]
+        cls = int(pred[:,0][0])
 
-        print(pr, cl)
+        predictions[cls] += 1
 
-    # query babies images
-    # for images in images:
-    #    preds = model.predict(image)
-    #    results = decode predictions(preds)
-    #    for (imagenetID, label, prob) in results[0]:
-    #       append to d[gender]
-    # if unequal get most and average else get average and highest
-    return d
+    predicted_gender_cls = max(predictions, key=predictions.get)
+    predicted_gender = gender_classes[predicted_gender_cls]
+
+    return predicted_gender
 
 
 @prediction.route("/predict", methods=["POST"])
 @login_required
 def predict():
-    data = {'success': False, 'error': None}
 
-    baby_id = request.form.get('id')
+    baby_id = request.form.get('button')
     baby = Baby.query.get(baby_id)
 
     if baby:
         if baby.parent_id == current_user.id:
-            gender = predict_gender(baby)
+            predicted = predict_gender(baby)
+            baby.predicted_gender = predicted
+            db.session.commit()
 
-            data['success'] = True
-            data['gender'] = gender
-
-    return data
+    return redirect(url_for('main.dashboard'))
 
 
 @prediction.route("/outcome/<token>")
@@ -103,8 +86,6 @@ def confirm_outcome(token):
 
     if oc != None and token:
         data = deserialize_outcome_token(token)
-        print(data)
-        you're here
 
         if data:
             parent_email = data.get('parent_email')
@@ -120,14 +101,13 @@ def confirm_outcome(token):
             ).first_or_404()
 
             if oc == True:
-                baby.gender == baby.predicted_gender
-
+                baby.gender = baby.predicted_gender
             else:
                 reverse = {'m': 'f', 'f': 'm'}
-                baby.gender == reverse[baby.predicted_gender]
-
+                baby.gender = reverse[baby.predicted_gender]
             db.session.commit()
-            # todo
+
+            # todo: an actual page
             return "Thanks!"
 
-    return 'error'
+    return "Invalid"

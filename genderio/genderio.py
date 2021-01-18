@@ -56,7 +56,7 @@ def scheduled():
         )
         subject = "Did we get it right?"
 
-        print(confirm_url)
+        print(data)
 
         # send_email(parent_email, subject, html)
 
