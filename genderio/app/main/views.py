@@ -1,6 +1,6 @@
 import os
 from ..helpers.utils import get_img_filename, save_image, dtdob
-from flask import Flask, request, send_from_directory, redirect, url_for
+from flask import Flask, request, send_from_directory, redirect, url_for, flash
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
@@ -17,6 +17,7 @@ from . import main
 
 @main.route("/", methods=["GET"])
 def index():
+    flash('It has been a success', 'success')
     return render_template("welcome.html")
 
 
