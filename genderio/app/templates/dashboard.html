@@ -13,8 +13,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="instruction-wrapper display-flex-center mb-3">
+        <div class="instruction-wrapper text-center mb-3">
           <p class="instruction">Crop the image so that only baby is in the square</p>
+        </div>
+        <div class="m-3">
+          <img src="{{ url_for('static', filename='img/example_crop.png') }}" alt="example image crop">
         </div>
         <div class="img-container">
           <img id="hidden_image" src="">
@@ -22,18 +25,20 @@
       </div>
       <div class="modal-baby-age">
         <h6 class="text-center">How old is baby in the picture?</h6>
-        <div class="row">
-          <div class="col">
-            <label for="weeks-old">
-              <p>Weeks</p>
-              <input class="form-control form-control-lg" type="text" name="weeks-old" value="0" id="baby-weeks-old">
-            </label>
-          </div>
-          <div class="col">
-            <label for="days-old">
-              <p>Days</p>
-              <input class="form-control form-control-lg" type="text" name="days-old" value="0" id="baby-days-old">
-            </label>
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <label for="weeks-old">
+                <p>Weeks</p>
+                <input class="form-control form-control-lg" type="text" name="weeks-old" value="0" id="baby-weeks-old">
+              </label>
+            </div>
+            <div class="col">
+              <label for="days-old">
+                <p>Days</p>
+                <input class="form-control form-control-lg" type="text" name="days-old" value="0" id="baby-days-old">
+              </label>
+            </div>
           </div>
         </div>
       </div>

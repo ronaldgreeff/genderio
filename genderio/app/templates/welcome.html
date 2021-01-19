@@ -2,11 +2,46 @@
 
 {% block content %}
 
-<div class="container">
-  <div class="text-white text-center">
-    <h1 class="display-4">InstaGender</h1>
-    <p class="lead mb-0">The <strong>fastest</strong>, most <strong>accurate</strong> gender determination.</p>
+<section>
+  <div class="container">
+    <div class="text-white text-center">
+      <h1 class="display-3">InstaGender</h1>
+      <p class="lead mb-0">Free gender prediction</p>
+    </div>
   </div>
-</div>
+</section>
+<section class="mt-5">
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title text-center">
+          <h2 class=display-4>How it works</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm m-2">
+          <div class="container">
+            <p>First, a neural network model and trained using thousands of
+            obstetric ultrasound images. Each image is passed into the network
+            with a label of "boy" or "girl".</p>
+            <p>Over time, the network determines the best features to distinguish boys
+            and girls and arrive at the correct label.
+            Rather than simply looking at a nub, skull or placenta, neural networks determine
+            what to look for in the "hidden layers" themselves.</p>
+            <p>Once the network is trained, a never-before-seen image can be passed in,
+            and based on what the network has learnt, output a predicted label of boy or girl.</p>
+          </div>
+        </div>
+        <div class="col-sm m-2">
+          <div class="display-flex-center">
+            <img src="static/img/neuralnet.gif" alt="neuralnet diagram showing baby image in and prediction out">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>
 
 {% endblock %}
