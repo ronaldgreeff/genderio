@@ -138,7 +138,7 @@ def reset():
         print(reset_url)
 
         flash("A password reset email has been sent.", "success")
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('auth.signin'))
 
     return render_template('reset_request.html', form=form)
 
