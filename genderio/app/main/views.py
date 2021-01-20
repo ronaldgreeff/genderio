@@ -13,11 +13,9 @@ from ..models import User, Baby, BabyImg
 from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 from . import main
 
-# main = Blueprint('main', __name__)
 
 @main.route("/", methods=["GET"])
 def index():
-    flash('It has been a success', 'success')
     return render_template("welcome.html")
 
 

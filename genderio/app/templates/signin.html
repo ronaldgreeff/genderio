@@ -1,53 +1,54 @@
 {% extends 'base.html' %}
 
+{% block title %}
+  Sign In
+{% endblock %}
+
 {% block content %}
 <div class="display-flex-center m-5">
   <div class="form-wrapper">
     <div class="logo display-flex-center">
-      <img
-      src="{{ url_for('static', filename='img/logo.png') }}"
-      alt="logo"
-      />
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" />
     </div>
 
-  <h1 class="text-center m-3">Log In</h1>
+    <h1 class="text-center m-3">Log In</h1>
 
-  <form method="POST" action="/signin">
-    {{ form.csrf_token }}
+    <form method="POST" action="/signin">
+      {{ form.csrf_token }}
 
-    <fieldset class="email mb-3">
-      <!-- {{ form.email.label(class="form-label") }} -->
-      {{ form.email(placeholder="Email", class="form-control") }}
-      {% if form.email.errors %}
-      <ul class="errors">
-        {% for error in form.email.errors %}
-        <li>{{ error }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-    </fieldset>
+      <fieldset class="email mb-3">
+        <!-- {{ form.email.label(class="form-label") }} -->
+        {{ form.email(placeholder="Email", class="form-control") }}
+        {% if form.email.errors %}
+        <ul class="errors">
+          {% for error in form.email.errors %}
+          <li>{{ error }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </fieldset>
 
-    <fieldset class="password mb-3">
-      <!-- {{ form.password.label(class="form-label") }} -->
-      {{ form.password(placeholder="Password", class="form-control") }}
-      {% if form.email.errors %}
-      <ul class="errors">
-        {% for error in form.password.errors %}
-        <li>{{ error }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-    </fieldset>
+      <fieldset class="password mb-3">
+        <!-- {{ form.password.label(class="form-label") }} -->
+        {{ form.password(placeholder="Password", class="form-control") }}
+        {% if form.email.errors %}
+        <ul class="errors">
+          {% for error in form.password.errors %}
+          <li>{{ error }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </fieldset>
 
-    <div class="submit-button mt-3 text-center">
-      {{ form.submit(class="btn btn-primary") }}
-    </div>
+      <div class="submit-button mt-3 text-center">
+        {{ form.submit(class="btn btn-primary") }}
+      </div>
 
-    <div class="login-signup mt-2">
-      <span>Don't have an account?</span>
-      <a href="{{ url_for('auth.signup') }}">Sign up.</a>
-    </div>
+      <div class="login-signup mt-2">
+        <span>Don't have an account?</span>
+        <a href="{{ url_for('auth.signup') }}">Sign up.</a>
+      </div>
 
-  </form>
-</div>
+    </form>
+  </div>
 </div>
 
 {% endblock %}

@@ -14,7 +14,9 @@ login_manager.login_view = 'auth.signin'
 
 def create_app(config_name):
 
-    app = Flask(__name__)#, instance_relative_config=False)
+    app = Flask(__name__,
+        static_folder="static",
+        )#, instance_relative_config=False)
     app.config.from_object(config[config_name])
     # db.init_app(app)
 
@@ -24,6 +26,7 @@ def create_app(config_name):
     mail.init_app(app)
     db.init_app(app)#*
     login_manager.init_app(app)
+    login_manager.login_message_category = "info"
 
 
     from .main import main as main_blueprint

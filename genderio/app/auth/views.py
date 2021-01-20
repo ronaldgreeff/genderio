@@ -5,13 +5,11 @@ from flask_login import login_required, logout_user, current_user, login_user
 from ..models import User
 from .. import db
 from ..email import send_email
-from .forms import SigninForm, SignupForm
+from .forms import SigninForm, SignupForm, EmailForm, PasswordForm
 from .tokens import generate_confirmation_token, confirm_email_token
 from datetime import datetime as dt
 from . import auth
 
-
-# TODO: forgot password
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -32,7 +30,7 @@ def signup():
             )
             user.set_password(form.password.data)
             db.session.add(user)
-            db.session.commit()  # Create new user
+            db.session.commit()
 
             token = generate_confirmation_token(user.email)
 
@@ -41,19 +39,15 @@ def signup():
             subject = "Please confirm your email"
             send_email(user.email, subject, html)
 
+            print(confirm_url)
+
             flash('A confirmation has been sent via email.', 'success')
 
             return redirect(url_for('main.dashboard'))
 
-        flash('A user already exists with that email address.')
+        flash('A user already exists with that email address.', 'warning')
 
-    return render_template(
-        'signup.html',
-        title='Create an Account.',
-        form=form,
-        template='signup-page',
-        body="Sign up for a user account."
-    )
+    return render_template('signup.html', form=form,)
 
 
 @auth.route('/unconfirmed')
@@ -82,20 +76,13 @@ def signin():
             login_user(user)
             next_page = request.args.get('next')
             return redirect(next_page or url_for('main.dashboard', user_id= user.id))
-        flash('Invalid username/password combination')
+        flash('Invalid username/password combination', 'danger')
         return redirect(url_for('auth.signin'))
 
-    return render_template(
-        'signin.html',
-        form=form,
-        title='Log in.',
-        template='login-page',
-        body="Log in with your User account."
-    )
+    return render_template('signin.html', form=form,)
 
 
 @auth.route('/confirm/<token>')
-# @login_required
 def confirm_email(token):
 
     try:
@@ -135,3 +122,41 @@ def resend_confirmation():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+
+@auth.route('/reset', methods=["GET", "POST"])
+def reset():
+    form = EmailForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first_or_404()
+        token = generate_confirmation_token(user.email)
+        reset_url = url_for('auth.confirm_reset', token=token, _external=True)
+        html = ('email_reset_password.html', reset)
+        subject = "Reset your password"
+        send_email(user.email, subject, html)
+
+        print(reset_url)
+
+        flash("A password reset email has been sent.", "success")
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('reset_request.html', form=form)
+
+@auth.route('/reset/<token>', methods=["GET", "POST"])
+def confirm_reset(token):
+    try:
+        email = confirm_email_token(token)
+    except:
+        flash("The confirmation link in invalid or has expired. Please try again.", "danger")
+        return redirect(url_for('auth.reset'))
+
+    form = PasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=email).first_or_404()
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash("Password successfully changed.", "success")
+        return redirect(url_for('auth.signin'))
+
+    return render_template('reset_envoke.html', form=form, token=token)
