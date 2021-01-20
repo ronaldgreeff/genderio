@@ -127,3 +127,10 @@ img {
 .drop-shadow {
   text-shadow: 1px 1px 3px black;
 }
+.nav-logo {
+  max-width: 75px;
+  text-shadow: 1px 1px 3px black;
+}
+.main-logo {
+  max-width: 200px;
+}

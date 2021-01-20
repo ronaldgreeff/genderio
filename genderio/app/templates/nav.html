@@ -1,5 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-light">
-  <a class="navbar-brand text-white drop-shadow" href="{{ url_for('main.index') }}">InstaGender</a>
+  <a class="navbar-brand text-white drop-shadow" href="{{ url_for('main.index') }}">
+    <img
+      src="{{ url_for('static', filename='img/nav_logo2w.png') }}"
+      alt="navigation logo"
+      class="nav-logo"
+    />
+  </a>
   <ul class="nav justify-content-end">
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('main.dashboard') }}">Home</a>
