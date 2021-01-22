@@ -128,19 +128,20 @@ def logout():
 def reset():
     form = EmailForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first_or_404()
-        token = generate_confirmation_token(user.email)
-        reset_url = url_for('auth.confirm_reset', token=token, _external=True)
-        html = ('email_reset_password.html', reset)
-        subject = "Reset your password"
-        send_email(user.email, subject, html)
+        user = User.query.filter_by(email=form.email.data).first()
 
-        print(reset_url)
+        if user:
+            token = generate_confirmation_token(user.email)
+            reset_url = url_for('auth.confirm_reset', token=token, _external=True)
+            html = render_template('email_reset.html', reset_url=reset_url)
+            subject = "Reset your password"
+            send_email(user.email, subject, html)
 
-        flash("A password reset email has been sent.", "success")
+        flash("Email sent to {} if account exists".format(form.email.data), "success")
         return redirect(url_for('auth.signin'))
 
     return render_template('reset_request.html', form=form)
+
 
 @auth.route('/reset/<token>', methods=["GET", "POST"])
 def confirm_reset(token):

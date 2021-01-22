@@ -14,7 +14,7 @@ class NewBabyForm(FlaskForm):
     )
     dob = DateField(
         'Date of Birth',
-        format='%Y-%m-%d',
+        format='%d-%m-%Y',
         validators=[
             DataRequired()
         ]
@@ -23,16 +23,13 @@ class NewBabyForm(FlaskForm):
 
 class UpdateBabyForm(FlaskForm):
     """Update a baby"""
-    id = HiddenField(
-        ''
-    )
+    id = HiddenField("")
     name = StringField(
         'Name',
         validators=[Optional()]
     )
     dob = DateField(
         'Date of Birth',
-        # format='%Y-%m-%d',
         format='%d-%m-%Y',
         validators=[
             DataRequired()
@@ -42,6 +39,8 @@ class UpdateBabyForm(FlaskForm):
     delete = SubmitField('Delete')
 
 class ConfirmationForm(FlaskForm):
-    id = HiddenField('')
+    id = HiddenField(validators=[
+        DataRequired()
+    ])
     right = SubmitField('Right')
     wrong = SubmitField('Wrong')

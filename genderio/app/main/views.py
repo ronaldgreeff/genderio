@@ -14,6 +14,11 @@ from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 from . import main
 
 
+def flash_errors(form_errors):
+    for k, v in form_errors.items():
+        flash("Error: {} - {}".format(k, v[0]), "danger")
+
+
 @main.route("/", methods=["GET"])
 def index():
     return render_template("welcome.html")
@@ -46,15 +51,27 @@ def dashboard():
 @main.route("/make_baby", methods=["POST"])
 @login_required
 def make_baby():
-    dob = dtdob(request.form.get('dob'))
-    baby = Baby(
-        name=request.form.get('name'),
-        dob=dob,
-        gender=request.form.get('gender'),
-        parent_id=current_user.id,
-    )
-    db.session.add(baby)
-    db.session.commit()
+    # dob = dtdob(request.form.get('dob'))
+    # baby = Baby(
+    #     name=request.form.get('name'),
+    #     dob=dob,
+    #     gender=request.form.get('gender'),
+    #     parent_id=current_user.id,
+    # )
+    form = NewBabyForm()
+
+    if form.validate_on_submit():
+        baby = Baby(
+            name=form.name.data,
+            dob=form.dob.data,
+            parent_id=current_user.id,
+        )
+
+        db.session.add(baby)
+        db.session.commit()
+
+    else:
+        flash_errors(form.errors)
 
     return redirect("dashboard")
 
@@ -62,48 +79,76 @@ def make_baby():
 @main.route("/update_baby", methods=["POST"])
 @login_required
 def update_baby():
+    form = UpdateBabyForm()
 
-    # if request.method == "POST":
-    baby_id = request.form.get('id')
-    name = request.form.get('name')
-    dob = dtdob(request.form.get('dob'))
+    if form.validate_on_submit():
+        baby = Baby.query.get(form.id.data)
+        if baby:
+            if baby.parent_id != current_user.id:
+                flash("That baby's parent ID isn't your ID", "danger")
+            else:
+                if form.update.data:
+                    baby.name = form.name.data
+                    baby.dob = form.dob.data
+                    db.session.commit()
+                    flash("Baby details updated", "success")
 
-    baby = Baby.query.get(baby_id)
-    if baby:
-        if baby.parent_id == current_user.id:
-            if request.form.get('update'):
-
-                baby.name = name
-                baby.dob = dob
-                db.session.commit()
-
-            elif request.form.get('delete'):
-
-                baby.parent_id = 0
-                db.session.commit()
+                elif form.delete.data:
+                    baby.parent_id = 0
+                    db.session.commit()
+                    flash("Baby deleted", "warning")
+        else:
+            flash("Baby ID invalid", "danger")
+    else:
+        flash_errors(form.errors)
 
     return redirect("dashboard")
+
 
 @main.route("/confirm_gender", methods=["POST"])
 @login_required
 def confirm_gender():
 
-    if request.method == "POST":
-        baby_id = request.form.get('id')
-
-        baby = Baby.query.get(baby_id)
+    form = ConfirmationForm()
+    if form.validate_on_submit():
+        baby = Baby.query.get(form.id.data)
         if baby:
-            if baby.parent_id == current_user.id:
-                if request.form.get('right'):
+            if baby.parent_id != current_user.id:
+                flash("That baby's parent ID isn't your ID", "danger")
+            else:
+                if form.right.data:
                     baby.gender = baby.predicted_gender
                     db.session.commit()
+                    flash("Thanks for confirming =)", "success")
 
-                elif request.form.get('wrong'):
+                elif form.wrong.data:
                     reverse = {'m': 'f', 'f': 'm'}
                     baby.gender = reverse[baby.predicted_gender]
                     db.session.commit()
+                    flash("Thanks for confirming. It helps us improve =)", "success")
+
+        else:
+            flash("Baby ID invalid", "danger")
+    else:
+        flash_errors(form.errors)
+
+    # if request.method == "POST":
+    #     baby_id = request.form.get('id')
+    #
+    #     baby = Baby.query.get(baby_id)
+    #     if baby:
+    #         if baby.parent_id == current_user.id:
+    #             if request.form.get('right'):
+    #                 baby.gender = baby.predicted_gender
+    #                 db.session.commit()
+    #
+    #             elif request.form.get('wrong'):
+    #                 reverse = {'m': 'f', 'f': 'm'}
+    #                 baby.gender = reverse[baby.predicted_gender]
+    #                 db.session.commit()
 
     return redirect("dashboard")
+
 
 @main.route("/upload_img", methods=["POST"])
 @login_required

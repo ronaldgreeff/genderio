@@ -10,7 +10,6 @@ mail = Mail()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.signin'
 
-# TODO: uncommented lines below
 
 def create_app(config_name):
 
