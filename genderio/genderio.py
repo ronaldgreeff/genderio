@@ -59,9 +59,3 @@ def scheduled():
         print(data)
 
         # send_email(parent_email, subject, html)
-
-    # url = url_for('', token=token, _external=True)
-    # # YOU ARE HERE
-
-    # todo: generate email with token and query params
-    # (for predicted outcome)
