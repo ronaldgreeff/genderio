@@ -23,7 +23,9 @@ class NewBabyForm(FlaskForm):
 
 class UpdateBabyForm(FlaskForm):
     """Update a baby"""
-    id = HiddenField("")
+    id = HiddenField(validators=[
+        DataRequired()
+    ])
     name = StringField(
         'Name',
         validators=[Optional()]
