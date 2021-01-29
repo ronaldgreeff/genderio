@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Confirm Reset
+{% endblock %}
+
+{% block content %}
+  <div class="display-flex-center m-5">
+    <div class="form-wrapper">
+      <div class="logo display-flex-center">
+        <img
+          src="{{ url_for('static', filename='img/logo.svg') }}"
+          alt="logo"
+          class="main-logo"
+        />
+      </div>
+
+      <h1 class="text-center m-3">Reset Password</h1>
+
+      <form class="" action="{{ url_for('auth.confirm_reset', token=token) }}" method="POST">
+        {{ form.csrf_token }}
+        <fieldset class="password mb-3">
+          {{ form.password(placeholder="New password", class="form-control") }}
+          {% if form.password.errors %}
+            <ul class="errors">
+              {% for error in form.password.errors %}
+                <li>{{ error }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </fieldset>
+
+        <fieldset class="password mb-3">
+          {{ form.confirm(placeholder="Confirm password", class="form-control") }}
+          {% if form.confirm.errors %}
+            <ul class="errors">
+              {% for error in form.confirm.errors %}
+                <li>{{ error }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </fieldset>
+
+        <div class="submit-button mt-3 text-center">
+          {{ form.submit(class="btn btn-primary") }}
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}
