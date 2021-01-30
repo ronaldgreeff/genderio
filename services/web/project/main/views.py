@@ -11,7 +11,8 @@ from sqlalchemy.orm import joinedload
 from .. import db
 from ..models import User, Baby, BabyImg
 from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
-# from . import main
+
+
 main = Blueprint('main', __name__)
 
 

@@ -1,9 +1,11 @@
 import os
+from datetime import datetime as dt
 from flask.cli import FlaskGroup
 from project import create_app  # from project import app, db, User
-from project.models import db
+from project.models import db, User
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+# app = create_app(os.getenv('FLASK_ENV') or 'default')
+app = create_app()
 cli = FlaskGroup(app)
 
 
@@ -14,10 +16,16 @@ def create_db():
     db.session.commit()
 
 
-# @cli.command("seed_db")
-# def seed_db():
-#     db.session.add(User(name="Ron", email="a@a.com", password="asdfgh", confirmed=1))
-#     db.session.commit()
+@cli.command("seed_db")
+def seed_db():
+    user = User(
+        name="Ron",
+        email="a@a.com",
+        created_on=dt.now(),
+        confirmed=1
+    )
+    user.set_password("asdfgh")
+    db.session.commit()
 
 
 if __name__ == "__main__":
