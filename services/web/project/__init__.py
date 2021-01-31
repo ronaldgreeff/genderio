@@ -1,14 +1,7 @@
 import os
 
-from werkzeug.utils import secure_filename
-from flask import (
-    Flask,
-    jsonify,
-    send_from_directory,
-    request,
-    redirect,
-    url_for
-)
+# # from werkzeug.utils import secure_filename
+from flask import Flask
 
 from .config import config
 from flask_login import LoginManager
@@ -22,12 +15,11 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.signin'
 
 
-# def create_app(config_name):
 def create_app():
 
     app = Flask(__name__)
     config_name = os.getenv('FLASK_ENV') or 'default'
-    print(config_name)
+
     app.config.from_object(config[config_name])
 
     mail.init_app(app)

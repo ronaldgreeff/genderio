@@ -1,16 +1,15 @@
 import os
-from ..helpers.utils import get_img_filename, save_image, dtdob
-from flask import Flask, request, send_from_directory, redirect, url_for, flash
+from flask import Flask, request, redirect, url_for, flash, send_from_directory
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
+from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 from .. import db
 from ..models import User, Baby, BabyImg
-from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
+from ..helpers.utils import get_img_filename, save_image, dtdob
 
 
 main = Blueprint('main', __name__)
@@ -57,13 +56,7 @@ def dashboard():
 @main.route("/make_baby", methods=["POST"])
 @login_required
 def make_baby():
-    # dob = dtdob(request.form.get('dob'))
-    # baby = Baby(
-    #     name=request.form.get('name'),
-    #     dob=dob,
-    #     gender=request.form.get('gender'),
-    #     parent_id=current_user.id,
-    # )
+
     form = NewBabyForm()
 
     if form.validate_on_submit():
@@ -167,6 +160,7 @@ def upload_img():
     baby_id = request.form.get('baby_id')
     weeks = request.form.get('weeks')
     days = request.form.get('days')
+    print("weeks old {} days old {}, types {} {}".format(weeks, days, type(weeks), type(days)))
 
     baby = Baby.query.get(baby_id)
 

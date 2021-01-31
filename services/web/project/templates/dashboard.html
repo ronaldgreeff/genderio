@@ -294,8 +294,8 @@
       let upload_img = document.getElementById(hidden_image.dataset.backref);
 
       let baby_id = $(upload_img).parents()[0].dataset.id;
-      let weeks_old = document.getElementById('baby-weeks-old');
-      let days_old = document.getElementById('baby-days-old');
+      let weeks_old = document.getElementById('baby-weeks-old').value;
+      let days_old = document.getElementById('baby-days-old').value;
 
       initialImage = upload_img.src;
       // upload_img.src = canvas.toDataURL();

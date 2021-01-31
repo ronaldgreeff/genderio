@@ -4,7 +4,9 @@ from flask.cli import FlaskGroup
 from project import create_app  # from project import app, db, User
 from project.models import db, User
 
+# TODO
 # app = create_app(os.getenv('FLASK_ENV') or 'default')
+# app = current_app._get_current_object() ?
 app = create_app()
 cli = FlaskGroup(app)
 
@@ -19,7 +21,7 @@ def create_db():
 @cli.command("seed_db")
 def seed_db():
     user = User(
-        name="Ron",
+        name="test",
         email="a@a.com",
         created_on=dt.now(),
         confirmed=1

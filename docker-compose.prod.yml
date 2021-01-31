@@ -9,6 +9,7 @@ services:
     volumes:
       - static_volume:/home/app/web/project/static
       - media_volume:/home/app/web/project/media
+      - originals_volume:/home/app/web/project/originals
     expose:
       - 5000
     env_file:
@@ -35,3 +36,4 @@ volumes:
   postgres_data:
   static_volume:
   media_volume:
+  originals_volume:

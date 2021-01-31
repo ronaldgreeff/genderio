@@ -37,11 +37,10 @@ def signup():
             token = generate_confirmation_token(user.email)
 
             confirm_url = url_for('auth.confirm_email', token=token, _external=True)
+
             html = render_template('email_confirm.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
             send_email(user.email, subject, html)
-
-            print(confirm_url)
 
             flash('A confirmation has been sent via email.', 'success')
 

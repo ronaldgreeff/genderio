@@ -1,12 +1,10 @@
 import os
-from flask import Flask, current_app
+from flask import Flask, current_app, send_from_directory
+from werkzeug.utils import secure_filename
 from project.config import Config
 from datetime import datetime as dt
 from uuid import uuid3, uuid4
 from PIL import Image
-
-# app = Flask(__name__)
-# app.config.from_object(Config)
 
 
 def get_img_filename(user_id):
@@ -21,21 +19,20 @@ def save_image(image, image_type, filename):
         if image_type in app.config['ALLOWED_EXTENSIONS']:
 
             # store original image in originals folder
-            og_pfp = os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type))
-            og_fp = os.path.join(app.root_path, og_pfp)
-            image.save(og_fp)
+            # og_pfp = os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type))
+            # og_fp = os.path.join(app.root_path, og_pfp)
+            # image.save(og_fp)
+            image.save(os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type)))
 
             # convert original to jpg and return filepath
-            img = Image.open(og_fp)
+            # img = Image.open(og_fp)
+            img = Image.open(os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type)))
             jpg = img.convert('RGB')
-            jpg_pfp = os.path.join(app.config['MEDIA_FOLDER'], '{}.jpg'.format(filename))
-            jpg.save(os.path.join(app.root_path, jpg_pfp), 'JPEG')
+            # jpg_pfp = os.path.join(app.config['MEDIA_FOLDER'], '{}.jpg'.format(filename))
+            # jpg.save(os.path.join(app.root_path, jpg_pfp), 'JPEG')
+            jpg.save(os.path.join(app.config['MEDIA_FOLDER'], "{}.jpg".format(filename)))
 
-            # partial_filepath = os.path.join(app.config['MEDIA_FOLDER'], "{}.{}".format(filename, image_type))
-            # filepath = os.path.join(app.root_path, partial_filepath)
-            # image.save(filepath)
-
-            return jpg_pfp
+            return os.path.join(app.config['MEDIA_FOLDER'], "{}.jpg".format(filename))
 
 
 def dtdob(str_time, format='%d-%m-%Y'):
