@@ -320,7 +320,7 @@
               if (data.success == true) {
                 upload_img.src = data.src;
                 window.location.href = "{{ url_for('main.dashboard') }}";
-                // TODO document.getElementById("images-for-" + baby_id).scrollIntoView();
+                // TODO document.getElementById("images-for-" + baby_id).scrollIntoView(); / scrollspy
               }
               else {
                 console.log(data.error) // todo: show errors / form validation

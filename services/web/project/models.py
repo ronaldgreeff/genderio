@@ -111,6 +111,11 @@ class Baby(db.Model):
         nullable=True,
         unique=False,
     )
+    deleted = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False,
+    )
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'),)
     images = db.relationship('BabyImg', backref='baby', lazy=True,)
 

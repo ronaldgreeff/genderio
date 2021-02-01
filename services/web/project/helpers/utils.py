@@ -32,7 +32,7 @@ def save_image(image, image_type, filename):
             # jpg.save(os.path.join(app.root_path, jpg_pfp), 'JPEG')
             jpg.save(os.path.join(app.config['MEDIA_FOLDER'], "{}.jpg".format(filename)))
 
-            return os.path.join(app.config['MEDIA_FOLDER'], "{}.jpg".format(filename))
+            return "{}.jpg".format(filename)
 
 
 def dtdob(str_time, format='%d-%m-%Y'):

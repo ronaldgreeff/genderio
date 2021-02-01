@@ -5,6 +5,7 @@ docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
   hello_flask_dev=# select * from parents;
   hello_flask_dev=# \dt
   hello_flask_dev=# \q
+  update parents set confirmed = 't' where id = 1;
 
 docker-compose -f docker-compose.prod.yml up -d --build
 winpty docker-compose -f docker-compose.prod.yml exec web python manage.py create_db
@@ -16,6 +17,7 @@ docker exec -it <container name> /bin/bash
 docker kill <container name>
 
 winpty docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
+
 
 
 TODO:

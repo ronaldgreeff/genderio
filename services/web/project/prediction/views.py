@@ -28,8 +28,8 @@ prediction = Blueprint('prediction', __name__)
 # from .helpers_keras import fetch_model
 # model = fetch_model()
 
-model = load_model(os.path.join(os.getcwd(), 'project/app/prediction/models/tl2_final'))
-model.load_weights(os.path.join(os.getcwd(), 'project/app/prediction/models/tl2_final.h5'))
+model = load_model(os.path.join(os.getcwd(), 'project/prediction/models/tl2_final'))
+model.load_weights(os.path.join(os.getcwd(), 'project/prediction/models/tl2_final.h5'))
 
 
 def predict_gender(baby):
@@ -45,7 +45,7 @@ def predict_gender(baby):
     predictions = {0: 0, 1: 0}
 
     for baby_image in baby_image_filepaths:
-        baby_image_path = os.path.join(os.getcwd(), 'app', baby_image[0])
+        baby_image_path = os.path.join(os.getcwd(), 'project', baby_image[0])
         image = keras.preprocessing.image.load_img(
             baby_image_path,
             color_mode="grayscale",

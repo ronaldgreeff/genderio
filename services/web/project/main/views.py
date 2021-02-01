@@ -37,7 +37,7 @@ def dashboard():
     if not current_user.confirmed:
         return redirect(url_for('auth.unconfirmed'))
 
-    babies = db.session.query(Baby).filter(Baby.parent_id == current_user.id).all()
+    babies = db.session.query(Baby).filter(Baby.parent_id == current_user.id, Baby.deleted == False).all()
 
     if not babies:
         message = "Start by adding your baby's photos below. If your baby has any siblings, you can increase prediction accuracy by adding their scans first."
@@ -93,7 +93,7 @@ def update_baby():
                     flash("Baby details updated", "success")
 
                 elif form.delete.data:
-                    baby.parent_id = 0
+                    baby.deleted = True
                     db.session.commit()
                     flash("Baby deleted", "warning")
         else:
@@ -167,9 +167,10 @@ def upload_img():
     if baby:
         if baby.parent_id == current_user.id:
             uid = get_img_filename(current_user.id)
-            partial_filepath = save_image(image, image_type, uid)
+            filename = save_image(image, image_type, uid)
+            filepath = os.path.join('media', filename)
             baby_img = BabyImg(
-                filepath=partial_filepath,
+                filepath=filepath,
                 baby_id=baby.id,
                 weeks=weeks,
                 days=days,
@@ -178,7 +179,7 @@ def upload_img():
             db.session.commit()
 
             data['success'] = True
-            data['src'] = partial_filepath
+            data['src'] = filepath
         else:
             data['error'] = "Parent ID does not match parent ID of baby"
     else:
@@ -188,7 +189,7 @@ def upload_img():
 
 
 # todo: should serve static files with nginx
-@main.route("/media/<filename>", methods=["GET"])
-@login_required
-def send_media(filename):
-    return send_from_directory('media', filename)
+# @main.route("/media/<path:filename>", methods=["GET"])
+# @login_required
+# def send_media(filename):
+#     return send_from_directory(app.config["MEDIA_FOLDER"], filename)

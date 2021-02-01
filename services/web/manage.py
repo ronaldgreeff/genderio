@@ -3,12 +3,23 @@ from datetime import datetime as dt
 from flask.cli import FlaskGroup
 from project import create_app  # from project import app, db, User
 from project.models import db, User
+from flask import send_from_directory
 
 # TODO
 # app = create_app(os.getenv('FLASK_ENV') or 'default')
 # app = current_app._get_current_object() ?
 app = create_app()
 cli = FlaskGroup(app)
+
+
+@app.route("/static/<path:filename>")
+def staticfiles(filename):
+    return send_from_directory(app.config["STATIC_FOLDER"], filename)
+
+
+@app.route("/media/<path:filename>")
+def mediafiles(filename):
+    return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 
 
 @cli.command("create_db")
