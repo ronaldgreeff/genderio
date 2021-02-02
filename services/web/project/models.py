@@ -68,6 +68,8 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+    # TODO: def __init__(self):
+
 
 class Baby(db.Model):
     """Baby model"""
@@ -117,9 +119,12 @@ class Baby(db.Model):
     def __repr__(self):
         return '<Baby {}>'.format(self.name)
 
+    # TODO: def __init__(self): created_on,
+
+
 
 class BabyImg(db.Model):
-    """Baby picture model"""
+    """Baby Image model"""
 
     __tablename__ = 'babypics'
     id = db.Column(

@@ -7,7 +7,7 @@ from . import mail
 
 def send_email(to, subject, template):
     """General send mail function. Takes 'to', 'subject' and 'template' """
-    # app = current_app._get_current_object()
+
     msg = Message(
         subject,
         recipients=[to],

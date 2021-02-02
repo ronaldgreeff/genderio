@@ -236,31 +236,8 @@
 <script src="static/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 
-  // // PREDICTION
-  // /////////////////////////////////
-  //
-  // $('.predict-button').children().on('click', function() {
-  //   let formData = new FormData();
-  //   formData.append("id", this.dataset.id);
-  //   $.ajax('/predict', {
-  //     method: 'POST',
-  //     data: formData,
-  //     processData: false,
-  //     contentType: false,
-  //
-  //     success: function(data) {
-  //       location.reload()
-  //     },
-  //     error: function (xhr, ajaxOptions, thrownError) {
-  //       console.log('error')
-  //       console.log(xhr.status);
-  //       console.log(thrownError);
-  //     },
-  //   })
-  // });
-
-  // IMAGE UPLOAD
-  /////////////////////////////////
+  // AJAX IMAGE UPLOAD
+  ////////////////////
 
   const $modal = $('#modal');
   const hidden_image = document.getElementById('hidden_image');
@@ -290,6 +267,7 @@
     $modal.modal('hide');
 
     if (cropper) {
+
       let canvas = cropper.getCroppedCanvas();
       let upload_img = document.getElementById(hidden_image.dataset.backref);
 
@@ -298,10 +276,8 @@
       let days_old = document.getElementById('baby-days-old').value;
 
       initialImage = upload_img.src;
-      // upload_img.src = canvas.toDataURL();
 
       canvas.toBlob(function(blob) {
-
         let formData = new FormData();
         formData.append('imageType', blob.type);
         formData.append("image", blob);
@@ -323,7 +299,7 @@
                 // TODO document.getElementById("images-for-" + baby_id).scrollIntoView(); / scrollspy
               }
               else {
-                console.log(data.error) // todo: show errors / form validation
+                console.log(data.error) // todo: show errors
               }
             },
 
@@ -353,6 +329,7 @@
         hidden_image.setAttribute("data-backref", upload_img.id);
         $modal.modal('show');
       };
+
       var reader;
       var file;
       var url;
