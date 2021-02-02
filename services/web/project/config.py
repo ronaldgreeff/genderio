@@ -5,8 +5,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')
+    SECRET_KEY = f"{os.getenv('SECRET_KEY')}"
+    SECURITY_PASSWORD_SALT = f"{os.getenv('SECURITY_PASSWORD_SALT')}"
 
     STATIC_FOLDER = f"{os.getenv('APP_FOLDER')}/project/static"
     MEDIA_FOLDER = f"{os.getenv('APP_FOLDER')}/project/media"

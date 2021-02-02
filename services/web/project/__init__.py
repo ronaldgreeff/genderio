@@ -16,7 +16,7 @@ def create_app():
     """Standard flask factory 'create_app' function"""
 
     app = Flask(__name__)
-    config_name = os.getenv('FLASK_ENV') or 'default'
+    config_name = f"{os.getenv('FLASK_ENV')}" or 'default'
     app.config.from_object(config[config_name])
 
     mail.init_app(app)
