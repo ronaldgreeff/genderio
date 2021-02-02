@@ -16,6 +16,7 @@ main = Blueprint('main', __name__)
 
 
 def flash_errors(form_errors):
+    """General function for flashing errors"""
     for k, v in form_errors.items():
         flash("Error: {} - {}".format(k, v[0]), "danger")
 
@@ -28,11 +29,7 @@ def index():
 @main.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
-    """
-    User baby dashboard
-    GET serves a list of existing babies for user + new baby form
-    POST validates new baby form
-    """
+    """User's dashboard"""
 
     if not current_user.confirmed:
         return redirect(url_for('auth.unconfirmed'))
@@ -56,6 +53,7 @@ def dashboard():
 @main.route("/make_baby", methods=["POST"])
 @login_required
 def make_baby():
+    """Make a baby"""
 
     form = NewBabyForm()
 
@@ -78,6 +76,8 @@ def make_baby():
 @main.route("/update_baby", methods=["POST"])
 @login_required
 def update_baby():
+    """update an existing baby"""
+
     form = UpdateBabyForm()
 
     if form.validate_on_submit():
@@ -107,23 +107,29 @@ def update_baby():
 @main.route("/confirm_gender", methods=["POST"])
 @login_required
 def confirm_gender():
+    """Confirm the predicted gender of a baby"""
 
     form = ConfirmationForm()
+
     if form.validate_on_submit():
         baby = Baby.query.get(form.id.data)
         if baby:
+
             if baby.parent_id != current_user.id:
                 flash("That baby's parent ID isn't your ID", "danger")
+
             else:
                 if form.right.data:
                     baby.gender = baby.predicted_gender
                     db.session.commit()
+
                     flash("Thanks for confirming =)", "success")
 
                 elif form.wrong.data:
                     reverse = {'m': 'f', 'f': 'm'}
                     baby.gender = reverse[baby.predicted_gender]
                     db.session.commit()
+
                     flash("Thanks for confirming. It helps us improve =)", "success")
 
         else:
@@ -131,27 +137,13 @@ def confirm_gender():
     else:
         flash_errors(form.errors)
 
-    # if request.method == "POST":
-    #     baby_id = request.form.get('id')
-    #
-    #     baby = Baby.query.get(baby_id)
-    #     if baby:
-    #         if baby.parent_id == current_user.id:
-    #             if request.form.get('right'):
-    #                 baby.gender = baby.predicted_gender
-    #                 db.session.commit()
-    #
-    #             elif request.form.get('wrong'):
-    #                 reverse = {'m': 'f', 'f': 'm'}
-    #                 baby.gender = reverse[baby.predicted_gender]
-    #                 db.session.commit()
-
     return redirect("dashboard")
 
 
 @main.route("/upload_img", methods=["POST"])
 @login_required
 def upload_img():
+    """Upload baby image from dashboard"""
 
     data = {'success': False, 'error': None}
 
@@ -160,12 +152,12 @@ def upload_img():
     baby_id = request.form.get('baby_id')
     weeks = request.form.get('weeks')
     days = request.form.get('days')
-    print("weeks old {} days old {}, types {} {}".format(weeks, days, type(weeks), type(days)))
 
     baby = Baby.query.get(baby_id)
 
     if baby:
         if baby.parent_id == current_user.id:
+
             uid = get_img_filename(current_user.id)
             filename = save_image(image, image_type, uid)
             filepath = os.path.join('media', filename)
@@ -180,16 +172,10 @@ def upload_img():
 
             data['success'] = True
             data['src'] = filepath
+
         else:
             data['error'] = "Parent ID does not match parent ID of baby"
     else:
         data['error'] = "No baby found with ID {}".format(baby_id)
 
     return jsonify(data)
-
-
-# todo: should serve static files with nginx
-# @main.route("/media/<path:filename>", methods=["GET"])
-# @login_required
-# def send_media(filename):
-#     return send_from_directory(app.config["MEDIA_FOLDER"], filename)

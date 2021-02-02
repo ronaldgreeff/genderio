@@ -8,7 +8,7 @@ from wtforms.validators import (
 
 
 class NewBabyForm(FlaskForm):
-    """Add a baby"""
+    """Make a baby"""
     name = StringField(
         'Name',
         validators=[Optional()]
@@ -44,6 +44,7 @@ class UpdateBabyForm(FlaskForm):
 
 
 class ConfirmationForm(FlaskForm):
+    """Confirm prediction"""
     id = HiddenField(validators=[
         DataRequired()
     ])
