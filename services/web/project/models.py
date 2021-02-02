@@ -54,11 +54,6 @@ class User(UserMixin, db.Model):
     )
     babies = db.relationship('Baby', backref='parent', lazy=True,)
 
-    # def __init__(self, name, email):
-    #     self.name = name
-    #     self.email = email
-    #     self.created_on = dt.now()
-
     def set_password(self, password):
         """Create hashed password."""
         self.password = generate_password_hash(

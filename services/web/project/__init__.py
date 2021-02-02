@@ -1,11 +1,8 @@
 import os
-
-# # from werkzeug.utils import secure_filename
 from flask import Flask, send_from_directory
-
-from .config import config
 from flask_login import LoginManager
 from flask_mail import Mail
+from .config import config
 from .models import db
 
 
@@ -16,6 +13,7 @@ login_manager.login_view = 'auth.signin'
 
 
 def create_app():
+    """Standard flask factory 'create_app' function"""
 
     app = Flask(__name__)
     config_name = os.getenv('FLASK_ENV') or 'default'
@@ -34,8 +32,8 @@ def create_app():
     from .auth.views import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    from .prediction.views import prediction as prediction_blueprint
-    app.register_blueprint(prediction_blueprint)
+    # from .prediction.views import prediction as prediction_blueprint
+    # app.register_blueprint(prediction_blueprint)
 
     from .models import User
 

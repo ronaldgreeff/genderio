@@ -1,24 +1,20 @@
 import os
-from datetime import datetime as dt
+from datetime import datetime, date, timedelta
 from flask.cli import FlaskGroup
 from project import create_app
 from project.email import send_email
-from project.models import db, User
-from flask import send_from_directory
+from project.models import db, User, Baby
+from project.prediction.tokens import generate_outcome_token
+from flask import send_from_directory, render_template, url_for
 
 
 app = create_app()
 cli = FlaskGroup(app)
 
 
-@app.cli.command()
-def test():
-    print('test')
-
-
 @cli.command("create_db")
-# @app.cli.command()
 def create_db():
+    """ Command to re-create the database """
     db.drop_all()
     db.create_all()
     db.session.commit()
@@ -26,22 +22,24 @@ def create_db():
 
 @cli.command("seed_db")
 def seed_db():
+    """ Command to create the first user based on environment variables """
     user = User(
-        name="test",
-        email="a@a.com",
-        created_on=dt.now(),
+        name=f"{os.getenv('APP_ADMIN_NAME')}",
+        email=f"{os.getenv('APP_ADMIN_EMAIL')}",
+        created_on=datetime.now(),
         confirmed=1
     )
-    user.set_password("asdfgh")  # TODO: use actual email/password via env vars
+    user.set_password(f"{os.getenv('APP_ADMIN_PASSWORD')}")
     db.session.add(user)
     db.session.commit()
 
 
 @cli.command("scheduled")
 def scheduled():
-    """Schedule (cron) run every Friday 10am"""
+    """ Command to run send of scheduled emails """
     a_week_ago = date.today() - timedelta(days=7)
 
+    # Retrieve Parent and Baby details for mail shot
     emails = db.session.query(
         User.email,
         User.name,
@@ -55,10 +53,9 @@ def scheduled():
         Baby.predicted_gender != 'u',
     ).all()
 
-    print(emails)
-
     for parent_email, user_name, baby in emails:
 
+        # get the user's name, and the baby's name (which is optional), else dob
         data = {
             'user_name': user_name,
         }
@@ -68,6 +65,7 @@ def scheduled():
         else:
             data['dob'] = baby.dob
 
+        # generate email
         token = generate_outcome_token(parent_email, baby.id)
         confirm_url = url_for('prediction.confirm_outcome', token=token, _external=True)
         html = render_template(
@@ -77,9 +75,15 @@ def scheduled():
         )
         subject = "Did we get it right?"
 
-        print(data)
+        print("Sending email to {}.\nURL: {}\nData{}\n".format(parent_email, confirm_url, data))
 
-        # send_email(parent_email, subject, html)
+        # send email
+        send_email(parent_email, subject, html)
+
+        # set last_outcome_email value
+        baby.last_outcome_email = date.today()
+        db.session.add(baby)
+        db.session.commit()
 
 
 if __name__ == "__main__":

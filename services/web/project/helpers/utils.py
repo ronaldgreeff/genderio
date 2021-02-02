@@ -19,17 +19,11 @@ def save_image(image, image_type, filename):
         if image_type in app.config['ALLOWED_EXTENSIONS']:
 
             # store original image in originals folder
-            # og_pfp = os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type))
-            # og_fp = os.path.join(app.root_path, og_pfp)
-            # image.save(og_fp)
             image.save(os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type)))
 
             # convert original to jpg and return filepath
-            # img = Image.open(og_fp)
             img = Image.open(os.path.join(app.config['ORIGINALS_FOLDER'], "{}.{}".format(filename, image_type)))
             jpg = img.convert('RGB')
-            # jpg_pfp = os.path.join(app.config['MEDIA_FOLDER'], '{}.jpg'.format(filename))
-            # jpg.save(os.path.join(app.root_path, jpg_pfp), 'JPEG')
             jpg.save(os.path.join(app.config['MEDIA_FOLDER'], "{}.jpg".format(filename)))
 
             return "{}.jpg".format(filename)
