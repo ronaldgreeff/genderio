@@ -1,32 +1,25 @@
 import os
 import pathlib
 import numpy as np
-from ..helpers.utils import get_img_filename, save_image, dtdob
 from flask import Flask, request, send_from_directory, redirect, url_for
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
-
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-from .. import db
-from ..models import User, Baby, BabyImg
-
 import keras
 from keras.models import load_model
 from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
-
-# from . import prediction
 from .tokens import generate_outcome_token, deserialize_outcome_token
+from .. import db
+from ..models import User, Baby, BabyImg
+from ..helpers.utils import get_img_filename, save_image, dtdob
 
 
 prediction = Blueprint('prediction', __name__)
 
-# keras disabled for now
-# from .helpers_keras import fetch_model
-# model = fetch_model()
 
 model = load_model(os.path.join(os.getcwd(), 'project/prediction/models/tl2_final'))
 model.load_weights(os.path.join(os.getcwd(), 'project/prediction/models/tl2_final.h5'))
@@ -83,10 +76,9 @@ def predict():
 
 @prediction.route("/outcome/<token>")
 def confirm_outcome(token):
+    """Confirm gender prediction with URL in form {{ confirm_url }}?oc=True/False"""
 
     oc = request.args.get('oc')
-    print(oc, token)
-    # token = request.args.get('token')
 
     if oc is not None and token:
         data = deserialize_outcome_token(token)
