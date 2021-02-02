@@ -10,7 +10,7 @@ from wtforms.validators import (
 
 
 class SignupForm(FlaskForm):
-    """User Sign-up Form."""
+    """User registration form."""
     name = StringField(
         'Name',
         validators=[DataRequired()]
@@ -41,7 +41,7 @@ class SignupForm(FlaskForm):
 
 
 class SigninForm(FlaskForm):
-    """User Sign-in Form."""
+    """User sign-in form."""
     email = StringField(
         'Email',
         validators=[
@@ -54,12 +54,13 @@ class SigninForm(FlaskForm):
 
 
 class EmailForm(FlaskForm):
+    """Reset password for email"""
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Reset')
 
 
 class PasswordForm(FlaskForm):
-
+    """Choose new password"""
     password = PasswordField(
         'Password',
         validators=[
