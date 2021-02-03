@@ -1,3 +1,36 @@
+# Insta-gender
+## Neural network powered gender prediction
+#### Video Demo:  <URL HERE>
+#### Description:
+web app that allows users to upload and crop baby scans before performing a prediction on the gender using a neural network model built with keras.
+
+built with:
+flask
+keras
+postgres
+gunicorn
+nginx
+docker
+
+env variable files for development and production
+
+app consists of
+auth:
+main:
+prediction:
+manage.py file with cli commands:
+re-creating the database
+seeding the database
+running scheduled email follow ups
+
+shoutouts
+https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
+https://blog.miguelgrinberg.com/post/run-your-flask-regularly-scheduled-jobs-with-cron#commentform
+https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html
+https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+
+useful commands
+
 docker-compose exec web python manage.py create_db
 docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
   hello_flask_dev=# \l
@@ -18,11 +51,3 @@ docker exec -it <container name> bash
 docker kill <container name>
 
 winpty docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
-
-
-
-TODO:
-Add back the removed requirements (tensorflow, etc.)
-Nginx reverse proxy + flask redirects:
-https://stackoverflow.com/questions/22312014/flask-redirecturl-for-error-with-gunricorn-nginx
-https://blog.macuyiko.com/post/2016/fixing-flask-url_for-when-behind-mod_proxy.html

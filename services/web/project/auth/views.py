@@ -19,6 +19,7 @@ def signup():
 
     if form.validate_on_submit():
         existing_user = User.query.filter_by(email=form.email.data).first()
+
         if existing_user is None:
             user = User(
                 name=form.name.data,
@@ -112,7 +113,7 @@ def resend_confirmation():
     html = render_template('email_confirm.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
 
-    print("Sending email to {}.\nURL: {}\n".format(user.email, confirm_url))
+    print("Sending email to {}.\nURL: {}\n".format(current_user.email, confirm_url))
 
     send_email(current_user.email, subject, html)
     flash('A new confirmation email has been sent.', 'success')
