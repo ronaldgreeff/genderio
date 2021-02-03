@@ -48,33 +48,33 @@ original artwork :blush:
 
 ##### development
 
-`docker-compose up -d --build
-docker-compose exec web python manage.py create_db
-docker-compose exec web python manage.py seed_db
-docker-compose logs -f
-docker-compose down -v`
+`docker-compose up -d --build`
+`docker-compose exec web python manage.py create_db`
+`docker-compose exec web python manage.py seed_db`
+`docker-compose logs -f`
+`docker-compose down -v`
 
-`docker exec -it <container name> bash
-docker kill <container name>`
+`docker exec -it <container name> bash`
+`docker kill <container name>`
 
-`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
-  hello_flask_dev=# \l
-  hello_flask_dev=# \c hello_flask_dev
-  hello_flask_dev=# select * from parents;
-  hello_flask_dev=# \dt
-  hello_flask_dev=# \q`
+`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev`
+` hello_flask_dev=# \l`
+` hello_flask_dev=# \c hello_flask_dev`
+` hello_flask_dev=# select * from parents;`
+` hello_flask_dev=# \dt`
+` hello_flask_dev=# \q`
 
 ##### production
 
-`docker-compose -f docker-compose.prod.yml up -d --build
-docker-compose -f docker-compose.prod.yml exec web python manage.py create_db
-docker-compose -f docker-compose.prod.yml exec web python manage.py seed_db
-docker-compose -f docker-compose.prod.yml logs -f
-docker-compose -f docker-compose.prod.yml down -v`
+`docker-compose -f docker-compose.prod.yml up -d --build`
+`docker-compose -f docker-compose.prod.yml exec web python manage.py create_db`
+`docker-compose -f docker-compose.prod.yml exec web python manage.py seed_db`
+`docker-compose -f docker-compose.prod.yml logs -f`
+`docker-compose -f docker-compose.prod.yml down -v`
 
-`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
-hello_flask_prod=# \l
-hello_flask_prod=# \c hello_flask_dev
-hello_flask_prod=# select * from parents;
-hello_flask_prod=# \dt
-hello_flask_prod=# \q`
+`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod`
+` hello_flask_prod=# \l`
+` hello_flask_prod=# \c hello_flask_dev`
+` hello_flask_prod=# select * from parents;`
+` hello_flask_prod=# \dt`
+` hello_flask_prod=# \q`
