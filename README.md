@@ -1,4 +1,4 @@
-# Insta-gender
+# Instagender
 ## *AI powered gender prediction*
 
 #### Video Demo:  [URL HERE](https://www.youtube.com/)
@@ -18,6 +18,9 @@
 **main**: user dashboard for creating babies, uploading and cropping their scans, and gaining a prediction
 **prediction**: retrieves uploaded images for given `baby_id`, pre-processes them and generates a gender prediction
 
+**media** and **originals** (along with static) as docker volumes to persist data
+
+**misc**
 `manage.py` file with cli commands:
 - re-creating the database
 - seeding the database
@@ -25,6 +28,7 @@
 
 `env` variable files for development and production environments
 
+original artwork :blush:
 
 #### future plans
 - [ ] testing
@@ -35,42 +39,42 @@
 
 
 #### shoutouts
-https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
-https://blog.miguelgrinberg.com/post/run-your-flask-regularly-scheduled-jobs-with-cron#commentform
-https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html
-https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
+- https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
+- https://blog.miguelgrinberg.com/post/run-your-flask-regularly-scheduled-jobs-with-cron#commentform
+- https://blog.keras.io/building-a-simple-keras-deep-learning-rest-api.html
+- https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html
 
 #### useful commands
 
-###### development
+##### development
 
-docker-compose up -d --build
+`docker-compose up -d --build
 docker-compose exec web python manage.py create_db
 docker-compose exec web python manage.py seed_db
 docker-compose logs -f
-docker-compose down -v
+docker-compose down -v`
 
-docker exec -it <container name> bash
-docker kill <container name>
+`docker exec -it <container name> bash
+docker kill <container name>`
 
-docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
+`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
   hello_flask_dev=# \l
   hello_flask_dev=# \c hello_flask_dev
   hello_flask_dev=# select * from parents;
   hello_flask_dev=# \dt
-  hello_flask_dev=# \q
+  hello_flask_dev=# \q`
 
-###### production
+##### production
 
-docker-compose -f docker-compose.prod.yml up -d --build
+`docker-compose -f docker-compose.prod.yml up -d --build
 docker-compose -f docker-compose.prod.yml exec web python manage.py create_db
 docker-compose -f docker-compose.prod.yml exec web python manage.py seed_db
 docker-compose -f docker-compose.prod.yml logs -f
-docker-compose -f docker-compose.prod.yml down -v
+docker-compose -f docker-compose.prod.yml down -v`
 
-winpty docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
+`docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
 hello_flask_prod=# \l
 hello_flask_prod=# \c hello_flask_dev
 hello_flask_prod=# select * from parents;
 hello_flask_prod=# \dt
-hello_flask_prod=# \q
+hello_flask_prod=# \q`
