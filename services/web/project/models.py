@@ -122,7 +122,6 @@ class Baby(db.Model):
     # TODO: def __init__(self): created_on,
 
 
-
 class BabyImg(db.Model):
     """Baby Image model"""
 

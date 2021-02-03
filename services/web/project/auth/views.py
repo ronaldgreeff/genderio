@@ -34,6 +34,8 @@ def signup():
             html = render_template('email_confirm.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
 
+            print("Sending email to {}.\nURL: {}\n".format(user.email, confirm_url))
+
             send_email(user.email, subject, html)
 
             flash('A confirmation has been sent via email.', 'success')
@@ -79,7 +81,8 @@ def unconfirmed():
 def confirm_email(token):
     """Confirm email with tokenised URL"""
 
-    if not confirm_email_token(token):
+    email = confirm_email_token(token)
+    if not email:
         flash('The confirmation link in invalid or has expired.', 'danger')
         return redirect(url_for('auth.resend'))
 
@@ -108,6 +111,8 @@ def resend_confirmation():
     confirm_url = url_for('auth.confirm_email', token=token, _external=True)
     html = render_template('email_confirm.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
+
+    print("Sending email to {}.\nURL: {}\n".format(user.email, confirm_url))
 
     send_email(current_user.email, subject, html)
     flash('A new confirmation email has been sent.', 'success')
@@ -151,7 +156,8 @@ def reset():
 def confirm_reset(token):
     """Change email if token legit"""
 
-    if not confirm_email_token(token):
+    email = confirm_email_token(token)
+    if not email:
         flash("The confirmation link in invalid or has expired. Please try again.", "danger")
         return redirect(url_for('auth.reset'))
 

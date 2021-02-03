@@ -1,5 +1,6 @@
+import os
 from itsdangerous import URLSafeSerializer, BadData, BadSignature
-from flask import Flask#, current_app
+from flask import Flask  # current_app
 from project.config import Config
 
 

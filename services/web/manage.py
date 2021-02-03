@@ -77,7 +77,6 @@ def scheduled():
 
         print("Sending email to {}.\nURL: {}\nData{}\n".format(parent_email, confirm_url, data))
 
-        # send email
         send_email(parent_email, subject, html)
 
         # set last_outcome_email value

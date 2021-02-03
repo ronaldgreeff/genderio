@@ -12,6 +12,6 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender=f"{os.getenv("MAIL_DEFAULT_SENDER")}"
+        sender=os.getenv("MAIL_DEFAULT_SENDER")
     )
     mail.send(msg)
