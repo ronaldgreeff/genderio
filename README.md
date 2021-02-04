@@ -40,10 +40,21 @@ Users are able to delete babies from their dashboard. However, the data is not t
 
 
 - ##### prediction
-The trained neural net model is stored within `prediction.models`. When a user requests a prediction on a baby, the application retrieves the images for that particular baby, pre-processes each one before passing them through the model, and calculates a single prediction for the image set.
+The trained neural net is stored within `prediction.models` along with the pipeline, `prediction.tl2_final.py`. When a user requests a prediction on a baby, the application retrieves the images for that particular baby, pre-processes each one before passing them through the model, and calculates a single prediction for the image set.
 
 Users are encouraged to upload scans for previous children if possible. If they do, they are given the chance to predict and confirm the prediction via the dashboard (`main.views.confirm_gender`). If however the baby's due date is in future, the user will receive an email 1 week after the due date asking whether or not the prediction was accurate (`prediction.views.confirm_outcome`). The latter tokenises the `baby_id` and `parent.email` values into a URL which is combined with a query parameter (`?oc=True` or `oc=False`) in `templates.email_confirm.html` and sent to the user using the CLI commands below.
 
+- ###### The convolutional neural net
+I experimented with several iterations of networks, learning rates, batch sizes and pre-trained models (for transfer learning - including VGG16, mobilenet and Xception, as well as building two of my own) and typically ended up with similar results/accuracy. Data cleansing was the most time consuming aspect of it all. The data I managed to obtain included corrupt images with termination error. To address this issue, I opened each image in the `Pillow` module, and re-saved them. I then copied the data to a new folder and progressively cleaned them as follows:
+
+| Folder Name | Progress |
+|-|-|
+|raw| Corruptions fixed using Pillow |
+|0| None ultrasounds, reformatted duplicates or obvious duplicates, 4D ultrasound, any too unfocussed - all removed|
+|1| Merged into gender folders with any multi-set ultrasounds placed into separate folders.|
+|2| All images Cropped to a minimum|
+|3| Poor quality images removed|
+|4| All images copped to only include anatomic features|
 
 - ##### Additional
 
