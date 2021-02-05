@@ -24,8 +24,55 @@ Uploaded data is persisted using **media** and **originals** (along with static)
 
 #### The Application's Structure
 The application is built using three modules:
+All views have appropriate flashed messages, but are easily found in the code so not mentioned detailed below.
+
 - ##### auth
 Auth uses `flask-login` to take care of some of the boilerplate for user registration and login. I've extended the module to include email confirmation, confirmation resend and password reset. Flask-login includes a very useful `current_user` hook used throughout the project.
+
+###### tokenizers
+Rely on `URLSafeTimedSerializer` to set time limit on token
+`generate_confirmation_token(email)`
+Generates confirmation token using user's email address, and `SECRET_KEY` and `SECURITY_PASSWORD_SALT` env variables
+`confirm_email_token(token, expiration=3600)`
+1 hour window. Returns False if BadData or BadSignature, else returns user's de-serialized email address
+
+
+###### views
+- signup() /signup
+  GET: Return sign-up form
+  POST: Validate sign-up form. Check if email address already used. If not, create the user. User password is set using `set_password` method on `User`  model. Send a confirmation email by tokenizing their email and generating url to `auth.confirm_email`, using the `email_confirm` template
+  Redirect to `main.dashboard`
+
+- signin() /signin
+  GET: Redirect user if already authenticated, else return sign-in form
+  POST: Validate sign-in form. If credentials correct, redirect to `main.dashboard`, else redirect to `auth.signin`
+
+- unconfirmed() /unconfirmed
+  GET: simply renders unconfirmed template
+
+- confirm_email(token) /confirm/<token>
+  GET: Validate token. If valid token, confirm user
+  Redirect to `main.dashboard`
+
+- resend_confirmation() /resend
+  Requires user to be logged in
+  GET: Tokenises `current_user`'s email and emails `email_confirm` template
+  Redirect to `auth.unconfirmed`
+
+- logout() /logout
+  GET: Executes `flask_login.logout_user()`
+  Redirect to `main.index` (which redirects to `auth.signin` if not signed in)
+
+- reset() /reset
+  GET: Return email address form
+  POST: If valid email, tokenize email and generate url to `auth.confirm_reset`, then send using `email_reset` template
+  Redirect to `auth.signin`
+
+- confirm_reset(token) /reset/<token>
+  GET: Validate token. If valid token, return password reset form
+  POST: Validate reset form
+  Redirect to `auth.signin`
+
 
 - ##### main
 The primary application consists of a dashboard that allows the user to manage their babies. It takes into account that users may have existing children and that unborn babies may not yet be given a name. Users can upload image formats specified in `config.py`.
@@ -37,6 +84,8 @@ I use nginx to efficiently serve media (and static) files, as specified in the `
 I noticed that I could significantly increase accuracy of my prediction by cropping out anything that isn't part of the baby's anatomy. Rather than cropping several thousand images by hand (again :expressionless:), I ask the user to do so upon upload, using [cropper.js](https://fengyuanchen.github.io/cropperjs/) within a bootstrap modal. Once the image is cropped, it's uploaded via Ajax, stored/converted, and the URL of the `jpg` is returned and inserted into the `src` attribute of the input that was originally clicked.
 
 Users are able to delete babies from their dashboard. However, the data is not truly deleted. Instead, it is flagged as deleted and excluded from the dashboard on that basis. This makes is possible to review the data before retraining the model in future and deciding whether or not to keep it in.
+
+###### views
 
 
 - ##### prediction
