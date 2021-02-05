@@ -30,48 +30,49 @@ All views have appropriate flashed messages, but are easily found in the code so
 Auth uses `flask-login` to take care of some of the boilerplate for user registration and login. I've extended the module to include email confirmation, confirmation resend and password reset. Flask-login includes a very useful `current_user` hook used throughout the project.
 
 ###### tokenizers
-Rely on `URLSafeTimedSerializer` to set time limit on token
-`generate_confirmation_token(email)`
-Generates confirmation token using user's email address, and `SECRET_KEY` and `SECURITY_PASSWORD_SALT` env variables
-`confirm_email_token(token, expiration=3600)`
+Auth tokens rely on `URLSafeTimedSerializer` to set time limit on token.
+- `generate_confirmation_token(email)`
+Generates confirmation token using user's email address, and `SECRET_KEY` and `SECURITY_PASSWORD_SALT` env variables.
+
+- `confirm_email_token(token, expiration=3600)`
 1 hour window. Returns False if BadData or BadSignature, else returns user's de-serialized email address
 
 
 ###### views
 - signup() /signup
-  GET: Return sign-up form
-  POST: Validate sign-up form. Check if email address already used. If not, create the user. User password is set using `set_password` method on `User`  model. Send a confirmation email by tokenizing their email and generating url to `auth.confirm_email`, using the `email_confirm` template
-  Redirect to `main.dashboard`
+  GET: Return sign-up form.
+  POST: Validate sign-up form. Check if email address already used. If not, create the user. User password is set using `set_password` method on `User`  model. Send a confirmation email by tokenizing their email and generating url to `auth.confirm_email`, using the `email_confirm` template.
+  Redirect to `main.dashboard`.
 
 - signin() /signin
-  GET: Redirect user if already authenticated, else return sign-in form
-  POST: Validate sign-in form. If credentials correct, redirect to `main.dashboard`, else redirect to `auth.signin`
+  GET: Redirect user if already authenticated, else return sign-in form.
+  POST: Validate sign-in form. If credentials correct, redirect to `main.dashboard`, else redirect to `auth.signin`.
 
 - unconfirmed() /unconfirmed
-  GET: simply renders unconfirmed template
+  GET: simply renders unconfirmed template.
 
 - confirm_email(token) /confirm/<token>
-  GET: Validate token. If valid token, confirm user
-  Redirect to `main.dashboard`
+  GET: Validate token. If valid token, confirm user.
+  Redirect to `main.dashboard`.
 
 - resend_confirmation() /resend
-  Requires user to be logged in
-  GET: Tokenises `current_user`'s email and emails `email_confirm` template
-  Redirect to `auth.unconfirmed`
+  Requires user to be logged in.
+  GET: Tokenises `current_user`'s email and emails `email_confirm` template.
+  Redirect to `auth.unconfirmed`.
 
 - logout() /logout
-  GET: Executes `flask_login.logout_user()`
-  Redirect to `main.index` (which redirects to `auth.signin` if not signed in)
+  GET: Executes `flask_login.logout_user()`.
+  Redirect to `main.index` (which redirects to `auth.signin` if not signed in).
 
 - reset() /reset
-  GET: Return email address form
-  POST: If valid email, tokenize email and generate url to `auth.confirm_reset`, then send using `email_reset` template
-  Redirect to `auth.signin`
+  GET: Return email address form.
+  POST: If valid email, tokenize email and generate url to `auth.confirm_reset`, then send using `email_reset` template.
+  Redirect to `auth.signin`.
 
 - confirm_reset(token) /reset/<token>
-  GET: Validate token. If valid token, return password reset form
-  POST: Validate reset form
-  Redirect to `auth.signin`
+  GET: Validate token. If valid token, return password reset form.
+  POST: Validate reset form.
+  Redirect to `auth.signin`.
 
 
 - ##### main
@@ -85,8 +86,30 @@ I noticed that I could significantly increase accuracy of my prediction by cropp
 
 Users are able to delete babies from their dashboard. However, the data is not truly deleted. Instead, it is flagged as deleted and excluded from the dashboard on that basis. This makes is possible to review the data before retraining the model in future and deciding whether or not to keep it in.
 
+`dashboard` only accepts `GET` request and `make_baby` `POST` - they're separated so that user can refresh page without re-submitting the new baby form if they hit refresh after a baby was added.
+
 ###### views
 
+- index() /
+  GET: return `welcome` template.
+
+- dashboard() /dashboard
+  GET: if user uncofirmed, redirect to `auth.unconfirmed`, else retrieve babies for `current_user`. If no babies, flash message on how to get started. Returns new baby form along with any babies with the attribute `deleted == False`. An update baby form is returned for each baby.
+
+- make_baby() /make_baby
+  POST: validated new baby form and creates a baby if valid.
+  Redirect to `main.dashboard`.
+
+- update_baby() /update_baby
+  POST: validate update baby form. Checks baby exists and belongs to the `current_user`. If `update` button pressed, baby's details are updated. If `delete` button pressed, attribute `deleted == True` is set.
+
+- confirm_gender() /confirm_gender
+  POST: validate gender confirmation form. Checks baby exists and belongs to the `current_user`. If "right" (correct prediction outcome) is clicked, the `Baby` model's `gender` attribute is set to the value of `predicted_gender`. If "wrong" is clicked, the `gender` attribute is reversed using a dictionary.
+  Redirect to `main.dashboard`.
+
+- upload_img() /upload_img
+
+upload image
 
 - ##### prediction
 The trained neural net is stored within `prediction.models` along with the pipeline, `prediction.tl2_final.py`. When a user requests a prediction on a baby, the application retrieves the images for that particular baby, pre-processes each one before passing them through the model, and calculates a single prediction for the image set.
@@ -115,6 +138,8 @@ Within the `web` root, a `manage.py` file is included with the following cli com
 This allows me to run the defined commands from the host machine using the docker `exec` command (see below). The `scheduled()` command can be run regularly by defining a cron job to do so.
 
 - ##### Misc
+
+helpers
 
 All `static/img` are `.svg` so that they scale crisply on any device. They're also all original pieces of artwork :blush:
 

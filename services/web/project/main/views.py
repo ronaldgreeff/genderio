@@ -9,16 +9,10 @@ from sqlalchemy.orm import joinedload
 from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 from .. import db
 from ..models import User, Baby, BabyImg
-from ..helpers.utils import get_img_filename, save_image, dtdob
+from ..helpers.utils import get_img_filename, save_image, dtdob, flash_errors
 
 
 main = Blueprint('main', __name__)
-
-
-def flash_errors(form_errors):
-    """General function for flashing errors"""
-    for k, v in form_errors.items():
-        flash("Error: {} - {}".format(k, v[0]), "danger")
 
 
 @main.route("/", methods=["GET"])
@@ -26,7 +20,7 @@ def index():
     return render_template("welcome.html")
 
 
-@main.route("/dashboard", methods=["GET", "POST"])
+@main.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
     """User's dashboard"""
