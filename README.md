@@ -94,27 +94,34 @@ Users are able to delete babies from their dashboard. However, the data is not t
   GET: return `welcome` template.
 
 - dashboard() /dashboard
+  Requires user to be logged in.
   GET: if user uncofirmed, redirect to `auth.unconfirmed`, else retrieve babies for `current_user`. If no babies, flash message on how to get started. Returns new baby form along with any babies with the attribute `deleted == False`. An update baby form is returned for each baby.
 
 - make_baby() /make_baby
+  Requires user to be logged in.
   POST: validated new baby form and creates a baby if valid.
   Redirect to `main.dashboard`.
 
 - update_baby() /update_baby
+  Requires user to be logged in.
   POST: validate update baby form. Checks baby exists and belongs to the `current_user`. If `update` button pressed, baby's details are updated. If `delete` button pressed, attribute `deleted == True` is set.
 
 - confirm_gender() /confirm_gender
+  Requires user to be logged in.
   POST: validate gender confirmation form. Checks baby exists and belongs to the `current_user`. If "right" (correct prediction outcome) is clicked, the `Baby` model's `gender` attribute is set to the value of `predicted_gender`. If "wrong" is clicked, the `gender` attribute is reversed using a dictionary.
   Redirect to `main.dashboard`.
 
 - upload_img() /upload_img
+  Requires user to be logged in.
+  POST: Checks baby exists and belongs to the `current_user`. If valid, generates unique filename for image. Original upload stored in `project/originals` and a jpg conversion stored in `project/media`. Filepath to media is stored in the database and then also returned to the front-end as `JSON`, where it is inserted into the `src` attribute of the image placeholder. If successful, the front-end triggers a page refresh.
 
-upload image
 
 - ##### prediction
 The trained neural net is stored within `prediction.models` along with the pipeline, `prediction.tl2_final.py`. When a user requests a prediction on a baby, the application retrieves the images for that particular baby, pre-processes each one before passing them through the model, and calculates a single prediction for the image set.
 
 Users are encouraged to upload scans for previous children if possible. If they do, they are given the chance to predict and confirm the prediction via the dashboard (`main.views.confirm_gender`). If however the baby's due date is in future, the user will receive an email 1 week after the due date asking whether or not the prediction was accurate (`prediction.views.confirm_outcome`). The latter tokenises the `baby_id` and `parent.email` values into a URL which is combined with a query parameter (`?oc=True` or `oc=False`) in `templates.email_confirm.html` and sent to the user using the CLI commands below.
+
+
 
 - ###### The convolutional neural net
 I experimented with several iterations of networks, learning rates, batch sizes and pre-trained models (for transfer learning - including VGG16, mobilenet and Xception, as well as building two of my own) and typically ended up with similar results/accuracy. Data cleansing was the most time consuming aspect of it all. The data I managed to obtain included corrupt images with termination error. To address this issue, I opened each image in the `Pillow` module, and re-saved them. I then copied the data to a new folder and progressively cleaned them as follows:

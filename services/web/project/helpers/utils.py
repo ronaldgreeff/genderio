@@ -34,7 +34,7 @@ def dtdob(str_time, format='%d-%m-%Y'):
     return dt.strptime(str_time, format).date()
 
 
-def flash_errors(form_errors):
+def flash_form_errors(form_errors):
     """General function for flashing errors"""
     for k, v in form_errors.items():
         flash("Error: {} - {}".format(k, v[0]), "danger")

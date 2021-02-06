@@ -1,13 +1,9 @@
 import os
 from itsdangerous import URLSafeTimedSerializer, BadData, BadSignature
-from flask import Flask  # current_app
+from flask import Flask
 from project.config import Config
 
 
-# app = Flask(__name__)
-# app.config.from_object(Config)
-# app = current_app._get_current_object()
-# serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 serializer = URLSafeTimedSerializer(f"{os.getenv('SECRET_KEY')}")
 
 

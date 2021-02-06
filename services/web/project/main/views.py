@@ -9,7 +9,7 @@ from sqlalchemy.orm import joinedload
 from .forms import NewBabyForm, UpdateBabyForm, ConfirmationForm
 from .. import db
 from ..models import User, Baby, BabyImg
-from ..helpers.utils import get_img_filename, save_image, dtdob, flash_errors
+from ..helpers.utils import get_img_filename, save_image, dtdob, flash_form_errors
 
 
 main = Blueprint('main', __name__)
@@ -62,7 +62,7 @@ def make_baby():
         db.session.commit()
 
     else:
-        flash_errors(form.errors)
+        flash_form_errors(form.errors)
 
     return redirect("dashboard")
 
@@ -93,7 +93,7 @@ def update_baby():
         else:
             flash("Baby ID invalid", "danger")
     else:
-        flash_errors(form.errors)
+        flash_form_errors(form.errors)
 
     return redirect("dashboard")
 
@@ -129,7 +129,7 @@ def confirm_gender():
         else:
             flash("Baby ID invalid", "danger")
     else:
-        flash_errors(form.errors)
+        flash_form_errors(form.errors)
 
     return redirect("dashboard")
 
