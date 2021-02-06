@@ -1,9 +1,13 @@
 # Instagender
-## *AI powered gender prediction*
+## *AI powered gender prediction* :baby:
 
 #### Video Demo:  [URL HERE](https://www.youtube.com/)
+&nbsp;
 #### Description:
-> Instagender is a web application that predicts the gender of a baby from ultrasound images using a neural network.
+Instagender is a web application that predicts the gender of a baby from ultrasound images using a neural network.
+&nbsp;
+#### Background
+I've developed this app as my final project for Harvard's CS50x course - building something of interest to me, that solves an actual problem and outlives the course. We've recently had a baby and my wife, wanting to be sure of the gender of the baby at 12 weeks, gave me the idea to build a gender prediction application. I hope to improve some aspects of the application and have used Docker specifically for the purposes of expansion and maintenance.
 
 # Overview
 ## Built using
@@ -203,7 +207,8 @@ Users are encouraged to upload scans for previous children if possible. If they 
 Auth tokens rely on `URLSafeSerializer`.
 
 - **`generate_outcome_token(parent_email, baby_id)`**
-Generates confirmation token using a dictionary comprised of a user's email address and the baby's id, along with `SECRET_KEY` env variable. **Note** This is called from `manage.py` using the `scheduled` CLI command.
+Generates confirmation token using a dictionary comprised of a user's email address and the baby's id, along with `SECRET_KEY` env variable.
+***Note:*** This is called from `manage.py` using the `scheduled` CLI command.
 &nbsp;
 - **`deserialize_outcome_token(token)`**
 Returns False if BadData or BadSignature, else returns user's de-serialized dictionary of user's email address and baby id.
@@ -222,13 +227,13 @@ Returns False if BadData or BadSignature, else returns user's de-serialized dict
   `GET`: If `token` and URL query args (`?oc=True` or `?oc=False`), validate token. If token valid, set `gender` attribute relative to `predicted_gender` - if query arg is `True`, set it to same value as `predicted`, otherwise reverse the gender with a simple dictionary.
 &nbsp;
 ##### *The convolutional neural net*
-I experimented with several iterations of networks, learning rates, batch sizes and pre-trained models (for transfer learning - including VGG16, mobilenet and Xception models, as well as building two of my own) and typically ended up with similar results/accuracy.
+I experimented with several iterations of networks, learning rates, batch sizes and pre-trained models (for transfer learning - including VGG16, mobilenet and Xception models, as well as building two of my own) and typically ended up with similar results/accuracy. The trained model and it's headers are stored in `prediction/models`.
 &nbsp;
 ###### Notable points
 - `class_mode` is set to binary, since there are binary outputs.
 - As such the output of the model is a *single* node using `sigmoid` activation function.
 - The loss function uses `binary_crossentropy` and `BinaryAccuracy` metrics.
-- Since colour doesn't matter (and actually decreased accuracy), I convert the images to      grayscale. This changes the input shape to have 1 channel instead of 3.
+- Since colour doesn't matter (and actually decreased accuracy), I convert the images to grayscale. This changes the input shape to have 1 channel instead of 3.
 &nbsp;
 ###### Challenges
 Data cleansing was the most time consuming aspect of it all. The data I managed to obtain included corrupt images with termination error. To address this issue, I opened each image in the `Pillow` module, and re-saved them. I then copied the data to a new folder and progressively cleaned them as follows:
@@ -241,8 +246,6 @@ Data cleansing was the most time consuming aspect of it all. The data I managed 
 |2| All images Cropped to a minimum|
 |3| Poor quality images removed|
 |4| All images cropped to only include anatomic features|
-
-The trained model and it's headers are stored in `prediction.models`.
 
 &nbsp;
 #### Additional
