@@ -1,7 +1,7 @@
 # Instagender
 ## *AI powered gender prediction* :baby:
 
-#### Video Demo:  [URL HERE](https://www.youtube.com/)
+#### Video Demo:  [URL HERE](https://youtu.be/DPfss9Alqtc)
 &nbsp;
 #### Description:
 Instagender is a web application that predicts the gender of a baby from ultrasound images using a neural network.
