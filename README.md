@@ -1,10 +1,10 @@
 # Instagender
-## *AI powered gender prediction* :baby:
+## *AI powered ultrasound gender prediction* :baby:
 
 #### [Video Demo](https://youtu.be/DPfss9Alqtc)
 &nbsp;
 #### Description:
-Instagender is a web application that predicts the gender of a baby from ultrasound images using a neural network.
+Instagender is a web application that predicts the gender of a baby from ultrasound images using a convolutional neural network.
 &nbsp;
 #### Background
 I've developed this app as my final project for Harvard's CS50x course - building something of interest to me, that solves an actual problem and outlives the course. We've recently had a baby and my wife, wanting to be sure of the gender of the baby at 12 weeks, gave me the idea to build a gender prediction application. I hope to improve some aspects of the application and have used Docker specifically for the purposes of expansion and maintenance.
