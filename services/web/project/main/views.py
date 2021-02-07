@@ -17,6 +17,7 @@ main = Blueprint('main', __name__)
 
 @main.route("/", methods=["GET"])
 def index():
+    """The landing/welcome page"""
     return render_template("welcome.html")
 
 

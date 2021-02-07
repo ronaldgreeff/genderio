@@ -1,5 +1,5 @@
 import os
-from flask import Flask, current_app, send_from_directory
+from flask import Flask, current_app, send_from_directory, flash
 from werkzeug.utils import secure_filename
 from project.config import Config
 from datetime import datetime as dt
@@ -8,11 +8,12 @@ from PIL import Image
 
 
 def get_img_filename(user_id):
+    """Generate a unique filename"""
     return uuid3(uuid4(), str(user_id)).hex
 
 
 def save_image(image, image_type, filename):
-    """ save original image and save jpg (model trained on jpgs) """
+    """Save original image and save jpg (model trained on jpgs)"""
     app = current_app._get_current_object()
     if image and image_type:
         image_type = image_type.split('/')[-1]

@@ -45,7 +45,8 @@ These allow data to be persisted if the `web` container is taken down. Volumes c
 
 &nbsp;
 #### Useful Docker commands
-To start, make sure you've copied the `env` files to `.env`.
+To start, make sure you've changed the `env` files in the root directory to `.env`.
+
 &nbsp;
 ##### General
 ```
@@ -60,7 +61,7 @@ docker kill <container name>
 ```
 &nbsp;
 ##### Development
-
+URL: 127.0.0.1:5000
 ```
 # build and run the containers, in the background (-d)
 docker-compose up -d --build
@@ -85,7 +86,7 @@ docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
 ```
 &nbsp;
 ##### Production
-
+URL: 127.0.0.1:1337
 ```
 docker-compose -f docker-compose.prod.yml up -d --build
 docker-compose -f docker-compose.prod.yml logs -f
