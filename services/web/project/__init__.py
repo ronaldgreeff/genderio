@@ -1,5 +1,5 @@
 import os
-from flask import Flask, send_from_directory, redirect
+from flask import Flask, send_from_directory, request, redirect
 from flask_login import LoginManager
 from flask_mail import Mail
 from .config import config
@@ -31,38 +31,25 @@ def create_app():
     from .auth.views import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    # from .prediction.views import prediction as prediction_blueprint
-    # app.register_blueprint(prediction_blueprint)
+    from .prediction.views import prediction as prediction_blueprint
+    app.register_blueprint(prediction_blueprint)
 
     from .models import User
-
 
     @login_manager.user_loader
     def load_user(user_id):
         user = User.query.get(int(user_id))
         return user
 
-
-    @app.before_request
-    def before_request():
-        if request.url.startswith('http://'):
-            url = request.url.replace('http://', 'https://', 1)
-            code = 301
-            return redirect(url, code=code)
-
-
     @app.route("/static/<path:filename>")
     def staticfiles(filename):
         return send_from_directory(app.config["STATIC_FOLDER"], filename)
-
 
     @app.route("/media/<path:filename>")
     def mediafiles(filename):
         return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 
-
     with app.app_context():
         db.create_all()
-
 
     return app
