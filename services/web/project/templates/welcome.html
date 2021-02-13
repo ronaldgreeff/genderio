@@ -8,8 +8,8 @@
       <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo" class="main-logo" />
     </div>
     <div class="text-center">
-      <h1 class="text-white drop-shadow main-title">InstaGender</h1>
-      <p class="mt-3 display-4">AI powered gender prediction.</p>
+      <h1 class="mt-4 text-white drop-shadow main-title">InstaGender</h1>
+      <p class="mt-5 display-4">AI powered gender prediction.</p>
     </div>
   </div>
 
@@ -17,30 +17,35 @@
     <p class="display-5">Leveraging the power of neural networks trained on thousands of baby ultrasound images, we're able to predict the gender of babies from as young as 12 weeks.</p>
   </div>
 
+  <br>
   <div class="mt-5 container">
     <h2 class="text-center big ">How does it work?</h2>
-    <div class="my-4 container">
+
+    <br>
+    <div class="container instruction-container">
       <h3>Snap</h3>
       <p>First, take pictures of your scans. We recommend using no flash in a well lit room to avoid any inclusions.</p>
       <div class="container display-flex-center">
         <img src="{{ url_for('static', filename='img/snap.svg') }}" alt="logo" class="illustration" />
       </div>
     </div>
-    <div class="my-4 container">
+    <hr>
+    <div class="container instruction-container">
       <h3>Crop</h3>
       <p>Upload and crop your photos so that as much of baby's anatomy is included, and everything else rest is excluded.</p>
       <div class="container display-flex-center">
         <img src="{{ url_for('static', filename='img/crop.svg') }}" alt="logo" class="illustration" />
       </div>
     </div>
-    <div class="my-4 container">
+    <hr>
+    <div class="container instruction-container">
       <h3>Click</h3>
       <p>When you're ready, click to predict!</p>
       <div class="container display-flex-center">
         <img src="{{ url_for('static', filename='img/click.svg') }}" alt="logo" class="illustration-small" />
       </div>
     </div>
-    <div class="my-5 display-flex-center">
+    <div class="mt-5 display-flex-center">
       <a href="{{ url_for('auth.signup') }}" class="btn btn-lg btn-primary">Let's do this!</a>
     </div>
   </div>

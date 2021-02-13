@@ -4,7 +4,7 @@ html {
 
 body {
   /* height: 100vh; */
-  background: linear-gradient(-45deg, #89cff0, #f8b9d4);
+  background: linear-gradient(-45deg, #89cff0, #f8b9d4, #89cff0, #f8b9d4);
 	background-size: 400% 400%;
 	animation: gradient 15s ease infinite;
 }
@@ -126,6 +126,7 @@ img {
 
 /* DASHBOARD */
 .baby-image {
+  display: inline-block;
   width: 144px;
   max-height: 144px;
 }
@@ -196,4 +197,14 @@ footer {
   .nav-link {
     padding: 0.5rem 0.5rem;
   }
+}
+
+.instruction-container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+hr {
+  max-width: 80%;
+  margin-top: 10%;
+  margin-bottom: 10%;
 }

@@ -20,6 +20,7 @@
 
     <h1 class="text-center m-3">Sign Up</h1>
 
+    <br>
     <form method="POST" action="/signup">
       {{ form.csrf_token }}
 
@@ -63,6 +64,7 @@
         {% endif %}
       </fieldset>
 
+      <br>
       <div class="submit-button mt-3 text-center">
         {{ form.submit(class="btn btn-primary") }}
       </div>
@@ -71,10 +73,13 @@
 
     <div class="login-signup mt-2">
       <div>
-        <span>Already have an account?</span>
-        <a href="{{ url_for('auth.signin') }}">Log in.</a>
+        <small>
+          <span>Already have an account?</span>
+          <a href="{{ url_for('auth.signin') }}">Log in.</a>
+        </small>
       </div>
     </div>
+
   </div>
 </div>
 {% endblock %}
