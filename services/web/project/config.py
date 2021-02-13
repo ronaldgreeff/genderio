@@ -16,13 +16,13 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = f"{os.getenv('DATABASE_URL', 'sqlite://')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER = f"{os.getenv('MAIL_SERVER')}"
-    MAIL_PORT = f"{os.getenv('MAIL_PORT')}"
-    MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
-    MAIL_USERNAME = f"{os.getenv('APP_MAIL_USERNAME')}"
-    MAIL_PASSWORD = f"{os.getenv('APP_MAIL_PASSWORD')}"
-    MAIL_DEFAULT_SENDER = f"{os.getenv('APP_MAIL_DEFAULT_SENDER')}"
+    # MAIL_SERVER = f"{os.getenv('MAIL_SERVER')}"
+    # MAIL_PORT = f"{os.getenv('MAIL_PORT')}"
+    # MAIL_USE_TLS = False
+    # MAIL_USE_SSL = True
+    # MAIL_USERNAME = f"{os.getenv('APP_MAIL_USERNAME')}"
+    # MAIL_PASSWORD = f"{os.getenv('APP_MAIL_PASSWORD')}"
+    # MAIL_DEFAULT_SENDER = f"{os.getenv('APP_MAIL_DEFAULT_SENDER')}"
 
 
 class DevelopmentConfig(Config):

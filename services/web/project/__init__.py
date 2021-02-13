@@ -1,12 +1,15 @@
 import os
 from flask import Flask, send_from_directory, request, redirect
 from flask_login import LoginManager
-from flask_mail import Mail
+# from flask_mail import Mail
 from .config import config
 from .models import db
+from sendgrid.helpers.mail import Mail
+from sendgrid import SendGridAPIClient
 
 
-mail = Mail()
+mail = Mail
+mail_api_client = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.signin'
@@ -19,7 +22,6 @@ def create_app():
     config_name = f"{os.getenv('FLASK_ENV')}" or 'default'
     app.config.from_object(config[config_name])
 
-    mail.init_app(app)
     db.init_app(app)
 
     login_manager.init_app(app)
