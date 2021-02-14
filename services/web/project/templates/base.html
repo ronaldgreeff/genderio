@@ -6,6 +6,14 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>
+      InstaGender &#8226;
+      {% block title %}
+      {% endblock %}
+    </title>
+
+    {% block description %}
+    {% endblock %}
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 
@@ -25,7 +33,6 @@
 
       gtag('config', 'G-Q2FP96SVYM');
     </script>
-
     <script src="{{ url_for('static', filename=('js/jquery-3.5.1.min.js')) }}"></script>
     <script src="{{ url_for('static', filename=('js/popper-1.14.7.min.js')) }}"></script>
     <script src="{{ url_for('static', filename=('js/cropper.min.js')) }}"></script>
@@ -38,14 +45,6 @@
     <section class="content">
 
       <header>
-        {% block header %}
-          <title>
-            InstaGender &#8226;
-            {% block title %}
-              Welcome
-            {% endblock %}
-          </title>
-        {% endblock %}
         {% include 'nav.html' %}
       </header>
 
