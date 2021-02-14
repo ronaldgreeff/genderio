@@ -1,0 +1,16 @@
+User-agent: googlebot
+Disallow: /unconfirmed
+Disallow: /confirm
+Disallow: /resend
+Disallow: /logout
+Disallow: /reset
+Disallow: /reset/
+Disallow: /media
+Disallow: /originals
+Disallow: /static
+Disallow: /make_baby
+Disallow: /update_baby
+Disallow: /confirm_gender
+Disallow: /upload_img
+Disallow: /predict
+Disallow: /outcome/

@@ -43,6 +43,9 @@ def create_app():
         user = User.query.get(int(user_id))
         return user
 
+    @app.route('/robots.txt')
+    # @app.route('/sitemap.xml')  # TODO
+
     @app.route("/static/<path:filename>")
     def staticfiles(filename):
         return send_from_directory(app.config["STATIC_FOLDER"], filename)
