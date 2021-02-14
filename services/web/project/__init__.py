@@ -33,8 +33,8 @@ def create_app():
     from .auth.views import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    # from .prediction.views import prediction as prediction_blueprint
-    # app.register_blueprint(prediction_blueprint)
+    from .prediction.views import prediction as prediction_blueprint
+    app.register_blueprint(prediction_blueprint)
 
     from .models import User
 
@@ -45,7 +45,6 @@ def create_app():
 
     @app.route('/robots.txt')
     # @app.route('/sitemap.xml')  # TODO
-
     @app.route("/static/<path:filename>")
     def staticfiles(filename):
         return send_from_directory(app.config["STATIC_FOLDER"], filename)

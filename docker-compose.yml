@@ -17,9 +17,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_flask
-      - POSTGRES_PASSWORD=hello_flask
-      - POSTGRES_DB=hello_flask_dev
+      - POSTGRES_USER=instauser
+      - POSTGRES_PASSWORD=instapassword
+      - POSTGRES_DB=instagender_dev
 
 volumes:
   postgres_data:
