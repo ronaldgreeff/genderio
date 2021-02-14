@@ -4,3 +4,5 @@ media/
 originals/
 .env*
 notes.txt
+
+env.*
