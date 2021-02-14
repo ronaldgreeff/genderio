@@ -60,6 +60,7 @@ def scheduled():
             'user_name': user_name,
         }
 
+        # use the baby name if it was set else use the dob
         if baby.name:
             data['baby_name'] = baby.name
         else:
@@ -75,8 +76,7 @@ def scheduled():
         )
         subject = "Did we get it right?"
 
-        print("Sending email to {}.\nURL: {}\nData{}\n".format(parent_email, confirm_url, data))
-
+        # send email
         send_email(parent_email, subject, html)
 
         # set last_outcome_email value
