@@ -28,7 +28,7 @@
           {% if form.password.errors %}
             <ul class="errors">
               {% for error in form.password.errors %}
-                <li>{{ error }}</li>{% endfor %}
+                <small><li>{{ error }}</li></small>{% endfor %}
             </ul>
           {% endif %}
         </fieldset>
@@ -38,7 +38,7 @@
           {% if form.confirm.errors %}
             <ul class="errors">
               {% for error in form.confirm.errors %}
-                <li>{{ error }}</li>{% endfor %}
+                <small><li>{{ error }}</li></small>{% endfor %}
             </ul>
           {% endif %}
         </fieldset>

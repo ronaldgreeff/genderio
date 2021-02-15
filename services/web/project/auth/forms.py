@@ -5,7 +5,8 @@ from wtforms.validators import (
     Email,
     EqualTo,
     Length,
-    Optional
+    Optional,
+    Regexp,
 )
 
 
@@ -20,14 +21,17 @@ class SignupForm(FlaskForm):
         validators=[
             Length(min=6),
             Email(message='Enter a valid email.'),
-            DataRequired()
+            DataRequired(),
         ]
     )
     password = PasswordField(
         'Password',
         validators=[
             DataRequired(),
-            Length(min=6, message='Select a stronger password.')
+            Length(min=6, message='Password requires a minimum of 6 characters.'),
+            Regexp(r"\d", message='Password should contain at least one digit.'),
+            Regexp(r"[A-Z]", message='Password should contain at least one uppercase letter.'),
+            Regexp(r"[a-z]", message='Password should contain at least one lowercase letter.'),
         ]
     )
     confirm = PasswordField(
