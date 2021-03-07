@@ -77,12 +77,12 @@ docker-compose exec web python manage.py create_db
 docker-compose exec web python manage.py seed_db
 
 # you can access the postgres database using the defaults values specified in the env.db file
-docker-compose exec db psql --username=hello_flask --dbname=hello_flask_dev
-  hello_flask_dev=# \l
-  hello_flask_dev=# \c hello_flask_dev
-  hello_flask_dev=# select * from parents;
-  hello_flask_dev=# \dt
-  hello_flask_dev=# \q
+docker-compose exec db psql --username=instauser --dbname=instagender_dev
+  instagender_dev=# \l
+  instagender_dev=# \c instagender_dev
+  instagender_dev=# select * from parents;
+  instagender_dev=# \dt
+  instagender_dev=# \q
 ```
 &nbsp;
 ##### Production
@@ -94,12 +94,12 @@ docker-compose -f docker-compose.prod.yml down -v
 docker-compose -f docker-compose.prod.yml exec web python manage.py create_db
 docker-compose -f docker-compose.prod.yml exec web python manage.py seed_db
 
-docker-compose exec db psql --username=hello_flask --dbname=hello_flask_prod
- hello_flask_prod=# \l
- hello_flask_prod=# \c hello_flask_dev
- hello_flask_prod=# select * from parents;
- hello_flask_prod=# \dt
- hello_flask_prod=# \q
+docker-compose exec db psql --username=instauser --dbname=instagender_prod
+ instagender_prod=# \l
+ instagender_prod=# \c instagender_prod
+ instagender_prod=# select * from parents;
+ instagender_prod=# \dt
+ instagender_prod=# \q
 ```
 &nbsp;
 ### Application - Flask

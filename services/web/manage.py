@@ -25,7 +25,7 @@ def seed_db():
     """ Command to create the first user based on environment variables """
     user = User(
         name=f"{os.getenv('APP_ADMIN_NAME')}",
-        email=f"{os.getenv('MAIL_DEFAULT_SENDER')}",
+        email=f"{os.getenv('APP_ADMIN_EMAIL')}",
         created_on=datetime.now(),
         confirmed=1
     )
