@@ -12,5 +12,8 @@ then
 fi
 
 python manage.py create_db
+python manage.py db init
+python manage.py db stamp head
+python manage.py db upgrade
 
 exec "$@"

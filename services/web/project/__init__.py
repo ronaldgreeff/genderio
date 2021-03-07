@@ -3,7 +3,7 @@ from flask import Flask, send_from_directory, request, redirect
 from flask_login import LoginManager
 # from flask_mail import Mail
 from .config import config
-from .models import db
+from .models import db, migrate
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 
@@ -23,6 +23,7 @@ def create_app():
     app.config.from_object(config[config_name])
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     login_manager.init_app(app)
     login_manager.login_message_category = "info"
