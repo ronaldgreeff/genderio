@@ -151,3 +151,19 @@ class BabyImg(db.Model):
 
     def __repr__(self):
         return '<Img {}>'.format(self.filename)
+
+# https://kirankoduru.github.io/python/flask-cms-app.html
+class Pages(db.Model):
+    __tablename__ = 'pages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(1000))
+    content = db.Column(db.BLOB)
+
+    def __init__(self, title, content):
+        self.title = title
+        self.content = content
+
+    def __repr__(self):
+        return '<Pages : id=%r, title=%s, content=%s>' \
+              % (self.id, self.title, self.content)

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, redirect, url_for, flash, send_from_directory
+from flask import Flask, request, redirect, url_for, flash
 from flask import jsonify
 from flask import render_template
 from flask import Blueprint
